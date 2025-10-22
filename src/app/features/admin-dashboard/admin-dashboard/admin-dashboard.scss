@@ -1,0 +1,40 @@
+.filters {
+  .form-select {
+    border-radius: 0.6rem;
+    border: 1px solid #ddd;
+    padding: 0.5rem 0.75rem;
+    min-width: 180px;
+    transition: 0.2s ease;
+
+    &:focus {
+      border-color: #a1171d;
+      box-shadow: 0 0 0 0.15rem rgba(161, 23, 29, 0.1);
+    }
+  }
+}
+
+.stat-card {
+  transition: all 0.3s ease-in-out;
+  border-left: 4px solid #a1171d;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+  }
+
+  .icon-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: rgba(161, 23, 29, 0.1);
+    color: #a1171d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.chart {
+  height: 320px;
+  width: 100%;
+}

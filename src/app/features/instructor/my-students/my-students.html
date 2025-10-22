@@ -1,0 +1,62 @@
+<div class="container py-4">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h4 class="fw-bold text-danger">
+      <i class="bi bi-people me-2"></i> My Students
+    </h4>
+  </div>
+
+  <!-- Filters -->
+  <div class="card shadow-sm border-0 mb-4 rounded-4">
+    <div class="card-body">
+      <form [formGroup]="filterForm" class="row g-3 align-items-center">
+        <div class="col-md-4">
+          <label class="form-label">Filter by Track</label>
+          <select class="form-select" formControlName="track">
+            <option value="">All Tracks</option>
+            <option *ngFor="let t of tracks" [value]="t">{{ t }}</option>
+          </select>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Table Section -->
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body">
+      <div *ngIf="loading" class="text-center py-4">
+        <div class="spinner-border text-danger"></div>
+      </div>
+
+      <table
+        class="table table-hover align-middle"
+        *ngIf="!loading && filteredStudents.length"
+      >
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Track</th>
+            <th>Round</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of filteredStudents; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ s.name }}</td>
+            <td>{{ s.email }}</td>
+            <td>{{ s.track?.name }}</td>
+            <td>{{ s.track?.round?.name }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div
+        *ngIf="!loading && !filteredStudents.length"
+        class="text-center text-muted py-4"
+      >
+        No students found.
+      </div>
+    </div>
+  </div>
+</div>

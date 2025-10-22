@@ -1,0 +1,148 @@
+<div class="container py-4">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h4 class="fw-bold text-danger">
+      <i class="bi bi-book me-2"></i> Manage Courses
+    </h4>
+  </div>
+
+  <!-- Form -->
+  <div class="card shadow-sm border-0 mb-4 rounded-4">
+    <div class="card-body">
+      <form [formGroup]="courseForm" (ngSubmit)="onSubmit()" class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Course Title</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="title"
+            placeholder="Enter course title"
+          />
+          <div
+            class="text-danger small mt-1"
+            *ngIf="
+              courseForm.get('title')?.invalid &&
+              courseForm.get('title')?.touched
+            "
+          >
+            Title is required (min 3 chars)
+          </div>
+        </div>
+
+        <div class="col-md-2">
+          <label class="form-label">Round</label>
+          <select class="form-select" formControlName="round">
+            <option value="">Select</option>
+            <option *ngFor="let r of rounds" [value]="r._id">
+              {{ r.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-md-2">
+          <label class="form-label">Track</label>
+          <select class="form-select" formControlName="track">
+            <option value="">Select</option>
+            <option *ngFor="let t of tracks" [value]="t._id">
+              {{ t.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-md-2">
+          <label class="form-label">Lecture Instructor</label>
+          <select class="form-select" formControlName="lectureInstructor">
+            <option value="">Select</option>
+            <option *ngFor="let i of instructors" [value]="i._id">
+              {{ i.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-md-2">
+          <label class="form-label">Lab Instructor</label>
+          <select class="form-select" formControlName="labInstructor">
+            <option value="">Select</option>
+            <option *ngFor="let i of instructors" [value]="i._id">
+              {{ i.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-12 text-end mt-2">
+          <button
+            class="btn btn-danger px-4"
+            type="submit"
+            [disabled]="courseForm.invalid"
+          >
+            {{ isEditing ? "Update" : "Add Course" }}
+          </button>
+          <button
+            *ngIf="isEditing"
+            class="btn btn-secondary ms-2"
+            type="button"
+            (click)="cancelEdit()"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body">
+      <div *ngIf="loading" class="text-center py-4">
+        <div class="spinner-border text-danger"></div>
+      </div>
+
+      <table
+        class="table table-hover align-middle"
+        *ngIf="!loading && courses.length"
+      >
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Round</th>
+            <th>Track</th>
+            <th>Lecture Instructor</th>
+            <th>Lab Instructor</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of courses; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ c.title }}</td>
+            <td>{{ c.round?.name }}</td>
+            <td>{{ c.track?.name }}</td>
+            <td>{{ c.lectureInstructor?.name }}</td>
+            <td>{{ c.labInstructor?.name }}</td>
+            <td class="text-end">
+              <button
+                class="btn btn-outline-secondary btn-sm me-2"
+                (click)="editCourse(c)"
+              >
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button
+                class="btn btn-outline-danger btn-sm"
+                (click)="deleteCourse(c._id)"
+              >
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div
+        *ngIf="!loading && !courses.length"
+        class="text-center text-muted py-4"
+      >
+        No courses found.
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,32 @@
+.navbar {
+  z-index: 1000;
+
+  img {
+    border-radius: 50%;
+  }
+
+  .btn-outline-danger {
+    border-color: #a1171d;
+    color: #a1171d;
+
+    &:hover {
+      background-color: #a1171d;
+      color: #fff;
+    }
+  }
+}
+
+.content-area {
+  background-color: #f7f8fa;
+  min-height: 100vh;
+
+  .welcome-box {
+    border-left: 4px solid #a1171d;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+  }
+}

@@ -1,0 +1,101 @@
+<div class="container py-4" *ngIf="!loading && course">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h4 class="fw-bold text-danger">
+      <i class="bi bi-book me-2"></i> {{ course.title }}
+    </h4>
+    <a
+      routerLink="/instructor/dashboard"
+      class="btn btn-outline-secondary btn-sm"
+    >
+      <i class="bi bi-arrow-left"></i> Back
+    </a>
+  </div>
+
+  <div class="card shadow-sm border-0 mb-4 rounded-4">
+    <div class="card-body">
+      <h6 class="text-muted mb-2">Track: {{ course.track?.name }}</h6>
+      <p class="small mb-1">
+        <i class="bi bi-person-video3 me-1"></i> Lecture Instructor:
+        <b>{{ course.lectureInstructor?.name || "-" }}</b>
+      </p>
+      <p class="small mb-0">
+        <i class="bi bi-laptop me-1"></i> Lab Instructor:
+        <b>{{ course.labInstructor?.name || "-" }}</b>
+      </p>
+    </div>
+  </div>
+
+  <!-- Upload Section -->
+  <div class="card shadow-sm border-0 mb-4 rounded-4">
+    <div class="card-body">
+      <h5 class="fw-bold text-danger mb-3">
+        <i class="bi bi-upload me-2"></i> Upload New Material
+      </h5>
+
+      <div class="d-flex align-items-center gap-3">
+        <input
+          type="file"
+          class="form-control"
+          (change)="onFileSelected($event)"
+          accept=".pdf,.ppt,.pptx,.mp4,.zip"
+        />
+        <button
+          class="btn btn-danger"
+          (click)="uploadMaterial()"
+          [disabled]="!selectedFile"
+        >
+          Upload
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Materials Section -->
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body">
+      <h5 class="fw-bold text-danger mb-3">
+        <i class="bi bi-folder2-open me-2"></i> Course Materials
+      </h5>
+
+      <div *ngIf="course.materials?.length; else noFiles">
+        <div class="row g-3">
+          <div class="col-md-6" *ngFor="let file of course.materials">
+            <div
+              class="border rounded-3 p-3 d-flex align-items-center justify-content-between"
+            >
+              <div class="d-flex align-items-center">
+                <i class="bi bi-file-earmark-text text-danger fs-4 me-3"></i>
+                <span>{{ file.filename }}</span>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <a
+                  [href]="file.url"
+                  target="_blank"
+                  class="btn btn-outline-secondary btn-sm"
+                >
+                  <i class="bi bi-eye"></i>
+                </a>
+                <button
+                  class="btn btn-outline-danger btn-sm"
+                  (click)="deleteMaterial(file._id)"
+                >
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noFiles>
+        <div class="text-center text-muted py-4">
+          No materials uploaded yet.
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="loading" class="text-center py-5">
+  <div class="spinner-border text-danger"></div>
+</div>

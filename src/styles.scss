@@ -1,1 +1,22 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+  font-family: "Cairo", sans-serif;
+  background-color: #f7f8fa;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+.btn-primary {
+  background-color: #a1171d;
+  border-color: #a1171d;
+  &:hover {
+    background-color: #861216;
+  }
+}
+
+input {
+  box-shadow: none !important;
+}

@@ -1,0 +1,18 @@
+input[type="file"] {
+  border-radius: 0.6rem;
+}
+
+.btn {
+  border-radius: 0.6rem;
+}
+
+.card {
+  transition: all 0.2s ease;
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.bi-file-earmark-text {
+  font-size: 1.8rem;
+}

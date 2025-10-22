@@ -1,0 +1,46 @@
+.card {
+  border-left: 4px solid #a1171d;
+}
+
+.nav-tabs {
+  border-bottom: 2px solid #eee;
+
+  .nav-link {
+    color: #555;
+    border: none;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+
+    &.active {
+      color: #a1171d;
+      border-bottom: 3px solid #a1171d;
+      background-color: transparent;
+      font-weight: 600;
+    }
+
+    &:hover {
+      color: #a1171d;
+      background-color: rgba(161, 23, 29, 0.05);
+    }
+  }
+}
+
+.material-card {
+  border: 1px solid #eee;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  .btn-outline-danger {
+    border-color: #a1171d;
+    color: #a1171d;
+
+    &:hover {
+      background-color: #a1171d;
+      color: #fff;
+    }
+  }
+}

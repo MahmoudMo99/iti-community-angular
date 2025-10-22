@@ -1,0 +1,48 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="card shadow-sm border-0 rounded-4 p-4 profile-card">
+        <div class="text-center mb-4">
+          <div class="avatar mb-3 mx-auto">
+            <i class="bi bi-person-circle text-danger display-4"></i>
+          </div>
+          <h5 class="fw-bold text-danger mb-0">{{ user?.name }}</h5>
+          <p class="text-muted mb-0">{{ user?.email }}</p>
+        </div>
+
+        <div class="profile-info">
+          <div class="info-item">
+            <span class="label"
+              ><i class="bi bi-person-badge me-2"></i>Role</span
+            >
+            <span class="value text-capitalize">{{ user?.role }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label"><i class="bi bi-diagram-3 me-2"></i>Track</span>
+            <span class="value">{{ user?.track?.name || "Not Assigned" }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label"
+              ><i class="bi bi-calendar-event me-2"></i>Round</span
+            >
+            <span class="value">{{ user?.round?.name || "Not Assigned" }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label"
+              ><i class="bi bi-clock-history me-2"></i>Joined</span
+            >
+            <span class="value">{{
+              user?.createdAt | date : "mediumDate"
+            }}</span>
+          </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <button class="btn btn-danger px-4" (click)="goToChangePassword()">
+            <i class="bi bi-key me-1"></i> Change Password
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

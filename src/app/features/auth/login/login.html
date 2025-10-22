@@ -1,0 +1,102 @@
+<div
+  class="login-page d-flex align-items-center justify-content-center min-vh-100"
+>
+  <div class="login-card shadow-lg rounded-4 p-4 bg-white">
+    <div class="text-center mb-4">
+      <img src="images/logo.png" alt="ITI Qena Logo" width="85" class="mb-2" />
+      <h5 class="fw-bold text-danger mb-0">ITI Community Platform</h5>
+      <p class="text-muted small mb-0">Qena Branch</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+      <div class="mb-3">
+        <label for="email" class="form-label fw-semibold">Email address</label>
+        <input
+          id="email"
+          type="email"
+          class="form-control"
+          formControlName="email"
+          [ngClass]="{
+            'is-invalid': f['email'].touched && f['email'].invalid,
+            'is-valid': f['email'].touched && f['email'].valid
+          }"
+          placeholder="Enter your ITI email"
+        />
+        <div class="feedback-space">
+          <div
+            class="invalid-feedback"
+            *ngIf="f['email'].touched && f['email'].hasError('required')"
+          >
+            Email is required
+          </div>
+          <div
+            class="invalid-feedback"
+            *ngIf="f['email'].touched && f['email'].hasError('email')"
+          >
+            Please enter a valid email
+          </div>
+          <div
+            class="valid-feedback"
+            *ngIf="f['email'].touched && f['email'].valid"
+          >
+            Looks good!
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label fw-semibold">Password</label>
+        <input
+          id="password"
+          type="password"
+          class="form-control"
+          formControlName="password"
+          [ngClass]="{
+            'is-invalid': f['password'].touched && f['password'].invalid,
+            'is-valid': f['password'].touched && f['password'].valid
+          }"
+          placeholder="Enter your password"
+        />
+        <div class="feedback-space">
+          <div
+            class="invalid-feedback"
+            *ngIf="f['password'].touched && f['password'].hasError('required')"
+          >
+            Password is required
+          </div>
+          <div
+            class="invalid-feedback"
+            *ngIf="f['password'].touched && f['password'].hasError('minlength')"
+          >
+            Password must be at least 6 characters
+          </div>
+          <div
+            class="valid-feedback"
+            *ngIf="f['password'].touched && f['password'].valid"
+          >
+            Looks good!
+          </div>
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-danger w-100 py-2 mt-2"
+        [disabled]="isLoading || loginForm.invalid"
+      >
+        <span *ngIf="!isLoading">Login</span>
+        <span *ngIf="isLoading"
+          ><span class="spinner-border spinner-border-sm me-2"></span> Logging
+          in...</span
+        >
+      </button>
+
+      <div
+        *ngIf="errorMessage"
+        class="alert alert-danger mt-3 py-2 text-center small"
+      >
+        {{ errorMessage }}
+      </div>
+    </form>
+  </div>
+</div>

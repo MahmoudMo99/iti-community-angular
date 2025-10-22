@@ -1,0 +1,107 @@
+<div class="container py-4" *ngIf="!isLoading; else loading">
+  <div class="card shadow-sm border-0 rounded-4 p-4 mb-4">
+    <div class="d-flex align-items-center justify-content-between flex-wrap">
+      <div>
+        <h4 class="fw-bold text-danger mb-1">{{ course?.name }}</h4>
+        <p class="text-muted mb-0">
+          <i class="bi bi-person-video3 me-1"></i>
+          Lecture Instructor:
+          <strong>{{ course?.lectureInstructor?.name || "N/A" }}</strong>
+          <span class="mx-2">|</span>
+          <i class="bi bi-tools me-1"></i>
+          Lab Instructor:
+          <strong>{{ course?.labInstructor?.name || "N/A" }}</strong>
+        </p>
+      </div>
+      <div>
+        <span class="badge bg-light text-dark border">
+          Materials: {{ course?.materials?.length || 0 }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs Navigation -->
+  <ul class="nav nav-tabs mb-4">
+    <li class="nav-item">
+      <button
+        class="nav-link"
+        [class.active]="activeTab === 'lectures'"
+        (click)="setActiveTab('lectures')"
+      >
+        <i class="bi bi-easel me-1"></i> Lectures
+      </button>
+    </li>
+    <li class="nav-item">
+      <button
+        class="nav-link"
+        [class.active]="activeTab === 'labs'"
+        (click)="setActiveTab('labs')"
+      >
+        <i class="bi bi-flask me-1"></i> Labs
+      </button>
+    </li>
+    <li class="nav-item">
+      <button
+        class="nav-link"
+        [class.active]="activeTab === 'resources'"
+        (click)="setActiveTab('resources')"
+      >
+        <i class="bi bi-folder2-open me-1"></i> Resources
+      </button>
+    </li>
+  </ul>
+
+  <!-- Tabs Content -->
+  <div [ngSwitch]="activeTab">
+    <!-- Lectures -->
+    <div *ngSwitchCase="'lectures'">
+      <div
+        *ngIf="!course?.materials?.length"
+        class="text-center text-muted py-5"
+      >
+        <i class="bi bi-emoji-neutral display-6 d-block mb-2"></i>
+        No lecture materials uploaded yet.
+      </div>
+
+      <div class="row g-3" *ngIf="course?.materials?.length">
+        <div class="col-md-6 col-lg-4" *ngFor="let item of course.materials">
+          <div class="material-card p-3 rounded-3 bg-white shadow-sm">
+            <div class="d-flex align-items-center mb-2">
+              <i class="bi bi-file-earmark-text fs-4 text-danger me-2"></i>
+              <div>
+                <p class="mb-0 fw-semibold text-dark">{{ item.title }}</p>
+                <small class="text-muted">{{ item.type | titlecase }}</small>
+              </div>
+            </div>
+            <a
+              [href]="item.fileUrl"
+              target="_blank"
+              class="btn btn-outline-danger btn-sm w-100 mt-2"
+            >
+              <i class="bi bi-download me-1"></i> View / Download
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Labs -->
+    <div *ngSwitchCase="'labs'" class="text-muted text-center py-5">
+      <i class="bi bi-flask display-6 d-block mb-2"></i>
+      Labs materials feature coming soon 💻
+    </div>
+
+    <!-- Resources -->
+    <div *ngSwitchCase="'resources'" class="text-muted text-center py-5">
+      <i class="bi bi-folder2-open display-6 d-block mb-2"></i>
+      Resources feature coming soon 📘
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="text-center py-5">
+    <div class="spinner-border text-danger" role="status"></div>
+  </div>
+</ng-template>

@@ -1,0 +1,151 @@
+<div class="container py-4">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h4 class="fw-bold text-danger">
+      <i class="bi bi-people me-2"></i> Manage Users
+    </h4>
+  </div>
+
+  <!-- Add User Form -->
+  <div class="card shadow-sm border-0 mb-4 rounded-4">
+    <div class="card-body">
+      <form
+        [formGroup]="userForm"
+        (ngSubmit)="onAddUser()"
+        class="row g-3 align-items-end"
+      >
+        <div class="col-md-3">
+          <label class="form-label">Full Name</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="name"
+            placeholder="Enter name"
+          />
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">Email</label>
+          <input
+            type="email"
+            class="form-control"
+            formControlName="email"
+            placeholder="Enter email"
+          />
+        </div>
+
+        <div class="col-md-2">
+          <label class="form-label">Role</label>
+          <select class="form-select" formControlName="role">
+            <option value="Student">Student</option>
+            <option value="Instructor">Instructor</option>
+          </select>
+        </div>
+
+        <div class="col-md-2">
+          <label class="form-label">Track</label>
+          <select class="form-select" formControlName="track">
+            <option value="">Select</option>
+            <option *ngFor="let t of tracks" [value]="t._id">
+              {{ t.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-md-2">
+          <button
+            class="btn btn-danger w-100"
+            type="submit"
+            [disabled]="userForm.invalid"
+          >
+            Add User
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Upload Excel -->
+  <div class="card shadow-sm border-0 mb-4 rounded-4">
+    <div
+      class="card-body d-flex justify-content-between align-items-center flex-wrap gap-3"
+    >
+      <div>
+        <label class="form-label fw-bold mb-0">Upload Excel File:</label>
+        <input
+          type="file"
+          (change)="onFileSelected($event)"
+          class="form-control"
+          style="width: 250px"
+        />
+      </div>
+
+      <button
+        class="btn btn-danger px-4"
+        (click)="uploadExcel()"
+        [disabled]="!selectedFile || isUploading"
+      >
+        <span *ngIf="!isUploading">Upload</span>
+        <span *ngIf="isUploading"
+          ><i class="spinner-border spinner-border-sm me-1"></i>
+          Uploading...</span
+        >
+      </button>
+    </div>
+  </div>
+
+  <!-- Users Table -->
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body">
+      <div *ngIf="loading" class="text-center py-4">
+        <div class="spinner-border text-danger"></div>
+      </div>
+
+      <table
+        class="table table-hover align-middle"
+        *ngIf="!loading && users.length"
+      >
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Track</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let u of users; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ u.name }}</td>
+            <td>{{ u.email }}</td>
+            <td>
+              <span
+                class="badge"
+                [ngClass]="u.role === 'Instructor' ? 'bg-info' : 'bg-secondary'"
+              >
+                {{ u.role }}
+              </span>
+            </td>
+            <td>{{ u.track?.name }}</td>
+            <td class="text-end">
+              <button
+                class="btn btn-outline-danger btn-sm"
+                (click)="onDeleteUser(u._id)"
+              >
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div
+        *ngIf="!loading && !users.length"
+        class="text-center text-muted py-4"
+      >
+        No users found.
+      </div>
+    </div>
+  </div>
+</div>

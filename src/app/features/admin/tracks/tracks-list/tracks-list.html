@@ -1,0 +1,121 @@
+<div class="container py-4">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h4 class="fw-bold text-danger">
+      <i class="bi bi-diagram-3 me-2"></i> Manage Tracks
+    </h4>
+  </div>
+
+  <!-- Form Section -->
+  <div class="card shadow-sm border-0 mb-4 rounded-4">
+    <div class="card-body">
+      <form [formGroup]="trackForm" (ngSubmit)="onSubmit()" class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Track Name</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="name"
+            placeholder="Enter track name"
+          />
+          <div
+            class="text-danger small mt-1"
+            *ngIf="
+              trackForm.get('name')?.invalid && trackForm.get('name')?.touched
+            "
+          >
+            Track name is required (min 3 chars)
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Round</label>
+          <select class="form-select" formControlName="round">
+            <option value="">Select Round</option>
+            <option *ngFor="let r of rounds" [value]="r._id">
+              {{ r.name }}
+            </option>
+          </select>
+          <div
+            class="text-danger small mt-1"
+            *ngIf="
+              trackForm.get('round')?.invalid && trackForm.get('round')?.touched
+            "
+          >
+            Round is required
+          </div>
+        </div>
+
+        <div class="col-md-2 d-flex align-items-end">
+          <button
+            class="btn btn-danger w-100"
+            type="submit"
+            [disabled]="trackForm.invalid"
+          >
+            {{ isEditing ? "Update" : "Add" }}
+          </button>
+        </div>
+
+        <div *ngIf="isEditing" class="col-md-12 text-end">
+          <button
+            class="btn btn-secondary btn-sm"
+            type="button"
+            (click)="cancelEdit()"
+          >
+            Cancel Edit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Table Section -->
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body">
+      <div *ngIf="loading" class="text-center py-4">
+        <div class="spinner-border text-danger"></div>
+      </div>
+
+      <table
+        class="table table-hover align-middle"
+        *ngIf="!loading && tracks.length"
+      >
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>Track Name</th>
+            <th>Round</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let t of tracks; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ t.name }}</td>
+            <td>{{ t.round?.name }}</td>
+            <td class="text-end">
+              <button
+                class="btn btn-outline-secondary btn-sm me-2"
+                (click)="editTrack(t)"
+              >
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button
+                class="btn btn-outline-danger btn-sm"
+                (click)="deleteTrack(t._id)"
+              >
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div
+        *ngIf="!loading && !tracks.length"
+        class="text-center text-muted py-4"
+      >
+        No tracks found.
+      </div>
+    </div>
+  </div>
+</div>

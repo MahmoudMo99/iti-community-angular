@@ -1,0 +1,42 @@
+<div class="d-flex">
+  <nav class="sidebar bg-white shadow-sm">
+    <div class="p-3 text-center border-bottom">
+      <img src="assets/iti-logo.png" class="logo mb-2" />
+      <h6 class="fw-bold text-danger mb-0">Student Panel</h6>
+    </div>
+
+    <ul class="nav flex-column mt-3">
+      <li>
+        <a
+          routerLink="/student/dashboard"
+          routerLinkActive="active"
+          class="nav-link"
+          ><i class="bi bi-house me-2"></i>Dashboard</a
+        >
+      </li>
+      <li>
+        <a
+          routerLink="/student/colleagues"
+          routerLinkActive="active"
+          class="nav-link"
+          ><i class="bi bi-people me-2"></i>My Colleagues</a
+        >
+      </li>
+    </ul>
+  </nav>
+
+  <div class="flex-grow-1">
+    <header
+      class="navbar bg-light shadow-sm px-3 d-flex justify-content-between"
+    >
+      <h6 class="text-danger fw-bold mb-0">ITI Community - Student</h6>
+      <button class="btn btn-outline-secondary btn-sm" (click)="logout()">
+        <i class="bi bi-box-arrow-right"></i> Logout
+      </button>
+    </header>
+
+    <main class="p-4">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

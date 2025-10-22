@@ -1,0 +1,90 @@
+<div class="container py-4">
+  <h4 class="fw-bold text-danger mb-4">
+    <i class="bi bi-chat-dots me-2"></i> Community Discussions
+  </h4>
+
+  <!-- New Post Form -->
+  <div
+    class="card border-0 shadow-sm rounded-4 mb-4 new-post-card"
+    *ngIf="user?.role !== 'Admin'"
+  >
+    <div class="card-body">
+      <form [formGroup]="postForm" (ngSubmit)="createPost()">
+        <textarea
+          formControlName="content"
+          class="form-control"
+          placeholder="Share something with your track..."
+          rows="3"
+        ></textarea>
+        <div class="text-end mt-2">
+          <button
+            class="btn btn-danger btn-sm px-4"
+            type="submit"
+            [disabled]="postForm.invalid"
+          >
+            <i class="bi bi-send me-1"></i> Post
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-danger" role="status"></div>
+  </div>
+
+  <!-- Posts -->
+  <div
+    *ngIf="!isLoading && posts.length === 0"
+    class="text-center text-muted py-5"
+  >
+    <i class="bi bi-emoji-frown display-6 d-block mb-2"></i>
+    No posts yet for this track.
+  </div>
+
+  <div
+    class="post-card card shadow-sm border-0 rounded-4 mb-4"
+    *ngFor="let post of posts"
+  >
+    <div class="card-body">
+      <div class="d-flex align-items-center mb-2">
+        <div class="user-icon me-2">
+          <i class="bi bi-person-circle text-danger fs-4"></i>
+        </div>
+        <div>
+          <strong>{{ post.author?.name }}</strong>
+          <p class="text-muted small mb-0">
+            {{ post.createdAt | date : "short" }}
+          </p>
+        </div>
+      </div>
+      <p class="mb-2">{{ post.content }}</p>
+
+      <div class="comments-section mt-3">
+        <div *ngFor="let comment of post.comments" class="comment-item">
+          <span class="fw-semibold">{{ comment.author?.name }}</span
+          >:
+          <span class="text-muted">{{ comment.text }}</span>
+        </div>
+
+        <!-- Add Comment -->
+        <div class="d-flex mt-2">
+          <input
+            type="text"
+            #commentInput
+            class="form-control form-control-sm me-2"
+            placeholder="Add a comment..."
+            (keyup.enter)="addComment(post._id, commentInput)"
+          />
+          <button
+            class="btn btn-sm btn-outline-danger"
+            (click)="addComment(post._id, commentInput)"
+          >
+            <i class="bi bi-chat-left-text"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

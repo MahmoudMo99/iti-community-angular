@@ -1,0 +1,30 @@
+.course-card {
+  border-radius: 1rem;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  .icon-circle {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background-color: rgba(161, 23, 29, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-danger {
+    background-color: #a1171d;
+    border-color: #a1171d;
+    transition: 0.2s ease-in-out;
+
+    &:hover {
+      background-color: #861216;
+      transform: translateY(-1px);
+    }
+  }
+}

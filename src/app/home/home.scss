@@ -1,0 +1,80 @@
+/* Hero Section */
+.hero {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #ffffff 0%, #fdf2f2 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .hero-logo {
+    width: 120px;
+    height: auto;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  h1 {
+    font-size: 2.3rem;
+    color: #a1171d;
+  }
+
+  p {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .btn {
+    transition: all 0.2s ease-in-out;
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 10px rgba(161, 23, 29, 0.25);
+    }
+  }
+}
+
+/* About Section */
+.about {
+  background: #fff;
+
+  h2 {
+    font-size: 1.8rem;
+  }
+}
+
+/* Features Section */
+.features {
+  background: #fafafa;
+
+  .feature-card {
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    &:hover {
+      transform: translateY(-5px);
+      border-color: #a1171d33;
+      box-shadow: 0 5px 15px rgba(161, 23, 29, 0.1);
+    }
+  }
+}
+
+/* Footer */
+footer {
+  border-top: 1px solid #eee;
+}
+
+/* Animation */
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 1.8rem;
+  }
+}

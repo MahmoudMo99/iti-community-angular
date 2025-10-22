@@ -1,0 +1,41 @@
+.new-post-card {
+  border-left: 4px solid #a1171d;
+
+  textarea {
+    border-radius: 0.8rem;
+    resize: none;
+    &:focus {
+      border-color: #a1171d;
+      box-shadow: 0 0 0 0.2rem rgba(161, 23, 29, 0.1);
+    }
+  }
+
+  .btn-danger {
+    background-color: #a1171d;
+    border-color: #a1171d;
+    &:hover {
+      background-color: #861216;
+    }
+  }
+}
+
+.post-card {
+  border-left: 4px solid rgba(161, 23, 29, 0.7);
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+  }
+
+  .comment-item {
+    background-color: #f8f9fb;
+    border-radius: 0.5rem;
+    padding: 6px 10px;
+    margin-bottom: 4px;
+  }
+
+  input.form-control {
+    border-radius: 0.6rem;
+  }
+}

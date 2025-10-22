@@ -1,0 +1,62 @@
+:host {
+  display: block;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 240px;
+  min-height: 100vh;
+  position: sticky;
+  top: 0;
+  transition: all 0.3s ease;
+  z-index: 100;
+
+  .logo {
+    width: 70px;
+  }
+
+  .nav-link {
+    color: #555;
+    padding: 10px 16px;
+    border-radius: 8px;
+    margin: 4px 8px;
+    transition: 0.2s;
+
+    &:hover {
+      background-color: rgba(161, 23, 29, 0.1);
+      color: #a1171d;
+    }
+
+    &.active {
+      background-color: #a1171d;
+      color: white;
+    }
+
+    i {
+      width: 20px;
+      text-align: center;
+    }
+  }
+}
+
+.main-content {
+  background-color: #fafafa;
+  overflow-y: auto;
+}
+
+.sidebar-collapsed .sidebar {
+  width: 0;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    z-index: 999;
+    transform: translateX(-100%);
+  }
+
+  .sidebar-collapsed .sidebar {
+    transform: translateX(0);
+  }
+}

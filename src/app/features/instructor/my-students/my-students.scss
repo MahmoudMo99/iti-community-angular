@@ -1,0 +1,11 @@
+.table-hover tbody tr:hover {
+  background-color: rgba(161, 23, 29, 0.05);
+}
+
+select.form-select {
+  border-radius: 0.6rem;
+  &:focus {
+    border-color: #a1171d;
+    box-shadow: 0 0 0 0.15rem rgba(161, 23, 29, 0.15);
+  }
+}
