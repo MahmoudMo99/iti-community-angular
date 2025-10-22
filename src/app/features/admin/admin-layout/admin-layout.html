@@ -1,75 +1,26 @@
-<div class="d-flex" [class.sidebar-collapsed]="!sidebarOpen">
-  <!-- Sidebar -->
-  <nav class="sidebar bg-white shadow-sm">
-    <div class="p-3 text-center border-bottom">
-      <img src="images/logo.png" alt="ITI Logo" class="logo mb-2" />
-      <h6 class="fw-bold text-danger mb-0">Admin Panel</h6>
-    </div>
+<div class="admin-layout">
+  <!-- Header -->
+  <app-admin-header (toggleSidebarEvent)="toggleSidebar()"></app-admin-header>
 
-    <ul class="nav flex-column mt-3">
-      <li class="nav-item">
-        <a
-          routerLink="/admin/dashboard"
-          routerLinkActive="active"
-          class="nav-link"
-        >
-          <i class="bi bi-speedometer2 me-2"></i> Dashboard
-        </a>
-      </li>
-      <li class="nav-item">
-        <a
-          routerLink="/admin/rounds"
-          routerLinkActive="active"
-          class="nav-link"
-        >
-          <i class="bi bi-calendar-event me-2"></i> Rounds
-        </a>
-      </li>
-      <li class="nav-item">
-        <a
-          routerLink="/admin/tracks"
-          routerLinkActive="active"
-          class="nav-link"
-        >
-          <i class="bi bi-diagram-3 me-2"></i> Tracks
-        </a>
-      </li>
-      <li class="nav-item">
-        <a
-          routerLink="/admin/courses"
-          routerLinkActive="active"
-          class="nav-link"
-        >
-          <i class="bi bi-book me-2"></i> Courses
-        </a>
-      </li>
-      <li class="nav-item">
-        <a routerLink="/admin/users" routerLinkActive="active" class="nav-link">
-          <i class="bi bi-people me-2"></i> Users
-        </a>
-      </li>
-    </ul>
-  </nav>
+  <!-- Overlay for mobile -->
+  <div
+    class="overlay"
+    *ngIf="isMobile && sidebarOpen"
+    (click)="toggleSidebar()"
+  ></div>
+
+  <!-- Sidebar -->
+  <app-admin-sidebar
+    [isOpen]="sidebarOpen"
+    [isMobile]="isMobile"
+    (close)="toggleSidebar()"
+  ></app-admin-sidebar>
 
   <!-- Main Content -->
-  <div class="main-content flex-grow-1">
-    <header
-      class="navbar bg-light shadow-sm px-3 d-flex align-items-center justify-content-between"
-    >
-      <button
-        class="btn btn-outline-danger btn-sm d-md-none"
-        (click)="toggleSidebar()"
-      >
-        <i class="bi bi-list"></i>
-      </button>
-      <h6 class="fw-bold text-danger mb-0">ITI Community - Admin</h6>
-      <button class="btn btn-outline-secondary btn-sm">
-        <i class="bi bi-box-arrow-right"></i> Logout
-      </button>
-    </header>
-
-    <main class="p-4">
-      <router-outlet></router-outlet>
-    </main>
-  </div>
+  <main
+    class="main-content"
+    [ngStyle]="{ 'margin-left': !isMobile && sidebarOpen ? '240px' : '0' }"
+  >
+    <router-outlet></router-outlet>
+  </main>
 </div>

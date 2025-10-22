@@ -1,0 +1,31 @@
+<nav class="sidebar" [class.open]="isOpen" [class.mobile]="isMobile">
+  <!-- Close button (Mobile only) -->
+  <button
+    *ngIf="isMobile"
+    class="btn-close position-absolute top-0 end-0 m-3"
+    (click)="close.emit()"
+  ></button>
+
+  <div class="sidebar-header text-center py-4 border-bottom">
+    <div class="logo-container mx-auto mb-2">
+      <img src="images/logo.png" alt="ITI Logo" class="logo" />
+    </div>
+    <h6 class="fw-bold text-danger mb-0">Admin Panel</h6>
+  </div>
+
+  <ul class="nav flex-column mt-3">
+    <li class="nav-item" *ngFor="let item of navItems">
+      <a
+        [routerLink]="item.link"
+        routerLinkActive="active"
+        class="nav-link d-flex align-items-center px-3 py-2"
+        (click)="onNavClick()"
+      >
+        <div class="icon-wrapper me-3">
+          <i [class]="item.icon"></i>
+        </div>
+        <span class="label">{{ item.label }}</span>
+      </a>
+    </li>
+  </ul>
+</nav>

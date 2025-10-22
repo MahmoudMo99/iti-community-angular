@@ -1,0 +1,13 @@
+.navbar {
+  border-bottom: 1px solid #eee;
+
+  .btn-outline-danger {
+    border-color: #a1171d;
+    color: #a1171d;
+    transition: 0.2s;
+    &:hover {
+      background-color: #a1171d;
+      color: #fff;
+    }
+  }
+}

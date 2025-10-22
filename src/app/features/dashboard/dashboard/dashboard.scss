@@ -1,21 +1,3 @@
-.navbar {
-  z-index: 1000;
-
-  img {
-    border-radius: 50%;
-  }
-
-  .btn-outline-danger {
-    border-color: #a1171d;
-    color: #a1171d;
-
-    &:hover {
-      background-color: #a1171d;
-      color: #fff;
-    }
-  }
-}
-
 .content-area {
   background-color: #f7f8fa;
   min-height: 100vh;
