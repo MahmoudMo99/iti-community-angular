@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Output } from "@angular/core";
 import { Auth } from "../../../core/services/auth";
-import { Router } from "@angular/router";
+import { Router, RouterModule } from "@angular/router";
+import { CommonModule } from "@angular/common";
 
 @Component({
   selector: "app-admin-header",
-  imports: [],
+  imports: [CommonModule, RouterModule],
   templateUrl: "./admin-header.html",
   styleUrl: "./admin-header.scss",
 })
@@ -12,6 +13,12 @@ export class AdminHeader {
   @Output() toggleSidebarEvent = new EventEmitter<void>();
 
   user: any = null;
+
+  menuOpen = false;
+
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
+  }
 
   constructor(private authService: Auth, private router: Router) {
     this.user = this.authService.getCurrentUser();
@@ -22,6 +29,7 @@ export class AdminHeader {
   }
 
   logout() {
+    this.menuOpen = false;
     this.authService.logout();
     this.router.navigate(["/login"]);
   }

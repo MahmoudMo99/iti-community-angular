@@ -28,6 +28,6 @@ export class AdminSidebar {
   constructor(private router: Router) {}
 
   onNavClick() {
-    if (this.isMobile) this.close.emit(); // ✅ يقفل السايدبار فقط في الموبايل
+    if (this.isMobile) this.close.emit();
   }
 }

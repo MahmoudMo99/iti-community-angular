@@ -1,8 +1,13 @@
 body {
   font-family: "Cairo", sans-serif;
-  background-color: #f7f8fa;
+  box-sizing: border-box;
+  background-color: #eff1f2 !important;
+}
+
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 a {
