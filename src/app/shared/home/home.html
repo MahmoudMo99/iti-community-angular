@@ -1,67 +1,133 @@
 <!-- Hero Section -->
-<section class="hero d-flex align-items-center text-center">
-  <div class="container">
-    <img src="assets/iti-logo.png" alt="ITI Logo" class="hero-logo mb-3" />
-    <h1 class="fw-bold mb-3 text-danger">ITI Community Platform</h1>
-    <p class="lead mb-4 text-muted">
-      A unified digital hub for ITI Qena — connecting students, instructors, and
-      administrators in one collaborative learning space.
-    </p>
-    <a
-      routerLink="/login"
-      class="btn btn-danger px-4 py-2 rounded-pill fw-semibold shadow-sm"
-    >
-      <i class="bi bi-box-arrow-in-right me-1"></i> Login
-    </a>
+<section
+  class="hero-section d-flex align-items-center justify-content-center text-center position-relative"
+>
+  <div class="overlay"></div>
+
+  <div class="container position-relative z-2">
+    <div class="hero-content mx-auto p-4 rounded-4">
+      <div class="logo-wrapper mb-4">
+        <img src="images/logo.png" alt="ITI Logo" class="hero-logo" />
+      </div>
+
+      <h1 class="fw-bold text-white mb-3 animate-fade-up">
+        Welcome to <span class="text-highlight">ITI Qena</span> Community
+      </h1>
+      <p class="lead text-white-50 mb-4 animate-fade-up delay-1">
+        A collaborative digital hub connecting students, instructors, and
+        administrators — fostering growth and innovation.
+      </p>
+
+      <a
+        routerLink="/login"
+        class="btn btn-danger rounded-pill px-5 py-2 fw-semibold shadow-lg animate-fade-up delay-2"
+      >
+        <i class="bi bi-box-arrow-in-right me-2"></i> Get Started
+      </a>
+    </div>
+  </div>
+
+  <!-- Bottom Wave -->
+  <div class="hero-wave">
+    <svg viewBox="0 0 1440 320">
+      <path
+        fill="#fff"
+        fill-opacity="1"
+        d="M0,64L60,69.3C120,75,240,85,360,122.7C480,160,600,224,720,224C840,224,960,160,1080,122.7C1200,85,1320,75,1380,69.3L1440,64L1440,320L0,320Z"
+      ></path>
+    </svg>
   </div>
 </section>
 
 <!-- About Section -->
-<section class="about py-5 text-center">
-  <div class="container">
-    <h2 class="fw-bold text-danger mb-3">About the Platform</h2>
-    <p class="text-muted mx-auto" style="max-width: 700px">
-      The ITI Community platform is built to simplify training management at ITI
-      Qena branch. It centralizes Rounds, Tracks, Courses, and communication
-      between Students and Instructors.
-    </p>
+<section class="about py-5 position-relative">
+  <div class="container position-relative">
+    <div class="row align-items-center g-5">
+      <!-- Text -->
+      <div class="col-lg-6 animate-slide-in-left">
+        <h2 class="fw-bold text-danger mb-3 position-relative">
+          About the Platform
+          <span class="title-underline"></span>
+        </h2>
+
+        <p class="text-muted fs-6 lh-lg">
+          The <strong>ITI Qena Platform</strong> provides an integrated system
+          for managing Rounds, Tracks, and Courses — connecting
+          <strong>students, instructors,</strong> and
+          <strong>admins</strong> under one digital experience.
+        </p>
+
+        <ul class="list-unstyled mt-4 text-muted">
+          <li class="about-item">
+            <i class="bi bi-check2-circle text-danger me-2"></i>
+            <span>Effortless course & track management</span>
+          </li>
+          <li class="about-item">
+            <i class="bi bi-shield-lock text-danger me-2"></i>
+            <span>Secure authentication and user access</span>
+          </li>
+          <li class="about-item">
+            <i class="bi bi-people text-danger me-2"></i>
+            <span>Enhanced collaboration tools for teams</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Image -->
+      <div class="col-lg-6 animate-slide-in-right text-center">
+        <div class="image-wrapper position-relative mx-auto">
+          <div class="glow-bg"></div>
+          <div class="image-glass shadow-lg">
+            <img
+              src="images/building.jpg"
+              alt="ITI Building"
+              class="img-fluid rounded-4"
+            />
+            <div class="floating-badge">
+              <i class="bi bi-lightning-charge-fill"></i>
+              <span>Smart Learning</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
 <!-- Features Section -->
-<section class="features py-5 bg-light">
+<section class="features py-5 text-center">
   <div class="container">
-    <h2 class="fw-bold text-center text-danger mb-5">Core Features</h2>
+    <h2 class="fw-bold mb-5 text-danger">Core Features</h2>
     <div class="row g-4">
       <div class="col-md-4">
-        <div class="feature-card p-4 text-center shadow-sm h-100 rounded-4">
-          <i class="bi bi-calendar-event fs-1 text-danger mb-3"></i>
+        <div class="feature-card p-4 rounded-4 h-100 animate-fade-up delay-1">
+          <div class="icon mb-3"><i class="bi bi-calendar-event"></i></div>
           <h5 class="fw-bold mb-2">Manage Rounds & Tracks</h5>
           <p class="text-muted small">
-            Organize all Rounds, Tracks, and students in one structured
-            dashboard.
+            Stay organized with structured dashboards for rounds and performance
+            tracking.
           </p>
         </div>
       </div>
 
       <div class="col-md-4">
-        <div class="feature-card p-4 text-center shadow-sm h-100 rounded-4">
-          <i class="bi bi-book fs-1 text-danger mb-3"></i>
-          <h5 class="fw-bold mb-2">Courses & Materials</h5>
+        <div class="feature-card p-4 rounded-4 h-100 animate-fade-up delay-2">
+          <div class="icon mb-3"><i class="bi bi-book"></i></div>
+          <h5 class="fw-bold mb-2">Courses & Resources</h5>
           <p class="text-muted small">
-            Instructors upload and manage lectures, labs, and resources for
+            Upload, manage, and share learning materials seamlessly with
             students.
           </p>
         </div>
       </div>
 
       <div class="col-md-4">
-        <div class="feature-card p-4 text-center shadow-sm h-100 rounded-4">
-          <i class="bi bi-people fs-1 text-danger mb-3"></i>
-          <h5 class="fw-bold mb-2">Student Collaboration</h5>
+        <div class="feature-card p-4 rounded-4 h-100 animate-fade-up delay-3">
+          <div class="icon mb-3"><i class="bi bi-people"></i></div>
+          <h5 class="fw-bold mb-2">Collaborative Learning</h5>
           <p class="text-muted small">
-            Students can view and connect with peers across different tracks and
-            rounds.
+            Connect, interact, and learn together in a unified digital
+            community.
           </p>
         </div>
       </div>
@@ -69,7 +135,6 @@
   </div>
 </section>
 
-<!-- Footer -->
-<footer class="py-4 text-center text-muted small bg-white border-top">
-  © 2025 ITI Qena Community Platform. All rights reserved.
+<footer class="footer py-4 text-center text-white small">
+  © {{ currentYear }} ITI Qena Community Platform | All Rights Reserved
 </footer>
