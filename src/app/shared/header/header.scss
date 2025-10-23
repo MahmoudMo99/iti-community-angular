@@ -1,0 +1,21 @@
+.main-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+
+  .logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+
+  .btn {
+    font-weight: 500;
+    &:hover {
+      background-color: #a1171d;
+      color: #fff;
+    }
+  }
+}
