@@ -1,14 +1,14 @@
-import { Component } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Round } from '../../../../core/services/round';
-import { CommonModule } from '@angular/common';
-import Swal from 'sweetalert2';
+import { Component } from "@angular/core";
+import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
+import { Round } from "../../../../core/services/round";
+import { CommonModule } from "@angular/common";
+import Swal from "sweetalert2";
 
 @Component({
-  selector: 'app-rounds-list',
+  selector: "app-rounds-list",
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './rounds-list.html',
-  styleUrl: './rounds-list.scss',
+  templateUrl: "./rounds-list.html",
+  styleUrl: "./rounds-list.scss",
 })
 export class RoundsList {
   roundForm: any;
@@ -21,9 +21,9 @@ export class RoundsList {
 
   constructor(private fb: FormBuilder, private roundService: Round) {
     this.roundForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3)]],
-      startDate: ['', Validators.required],
-      endDate: ['', Validators.required],
+      name: ["", [Validators.required, Validators.minLength(3)]],
+      startDate: ["", Validators.required],
+      endDate: ["", Validators.required],
     });
   }
 
@@ -55,8 +55,8 @@ export class RoundsList {
     action.subscribe({
       next: () => {
         Swal.fire({
-          icon: 'success',
-          title: this.isEditing ? 'Round Updated!' : 'Round Added!',
+          icon: "success",
+          title: this.isEditing ? "Round Updated!" : "Round Added!",
           timer: 1500,
           showConfirmButton: false,
         });
@@ -75,24 +75,24 @@ export class RoundsList {
     this.editingId = round._id;
     this.roundForm.patchValue({
       name: round.name,
-      startDate: round.startDate.split('T')[0],
-      endDate: round.endDate.split('T')[0],
+      startDate: round.startDate.split("T")[0],
+      endDate: round.endDate.split("T")[0],
     });
   }
 
   deleteRound(id: string) {
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'This round will be permanently deleted!',
-      icon: 'warning',
+      title: "Are you sure?",
+      text: "This round will be permanently deleted!",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#a1171d',
-      cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonColor: "#a1171d",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
         this.roundService.deleteRound(id).subscribe(() => {
-          Swal.fire('Deleted!', 'Round has been removed.', 'success');
+          Swal.fire("Deleted!", "Round has been removed.", "success");
           this.loadRounds();
         });
       }

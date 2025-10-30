@@ -1,29 +1,52 @@
-<nav class="sidebar" [class.open]="isOpen" [class.mobile]="isMobile">
+<nav
+  class="sidebar"
+  [class.open]="isOpen"
+  [class.mobile]="isMobile"
+  [class.collapsed]="isCollapsed"
+>
   <button
     *ngIf="isMobile"
     class="btn-close position-absolute top-0 end-0 m-3"
     (click)="close.emit()"
   ></button>
 
-  <div class="sidebar-header text-center py-4 border-bottom">
+  <div class="collapse-btn d-none d-lg-block position-absolute top-0 end-0">
+    <button
+      type="button"
+      class="btn btn-sm text-danger"
+      (click)="toggleCollapse()"
+      [attr.aria-label]="isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'"
+    >
+      <i
+        class="bi"
+        [ngClass]="
+          isCollapsed ? 'bi-arrow-right-circle' : 'bi-arrow-left-circle'
+        "
+      ></i>
+    </button>
+  </div>
+
+  <div class="sidebar-header text-center pt-5 pb-3 border-bottom">
     <div class="logo-container mx-auto mb-2">
       <img src="images/logo.png" alt="ITI Logo" class="logo" />
     </div>
     <h6 class="fw-bold text-danger mb-0">Admin Panel</h6>
   </div>
 
+  <!-- Navigation -->
   <ul class="nav flex-column mt-5 mt-lg-3">
     <li class="nav-item" *ngFor="let item of navItems">
       <a
         [routerLink]="item.link"
         routerLinkActive="active"
-        class="nav-link d-flex align-items-center ps-1 py-0"
+        class="nav-link d-flex align-items-center ps-2 py-2"
         (click)="onNavClick()"
+        [attr.title]="isCollapsed ? item.label : null"
       >
         <div class="icon-wrapper me-3">
           <i [class]="item.icon"></i>
         </div>
-        <span class="label">{{ item.label }}</span>
+        <span class="label" *ngIf="!isCollapsed">{{ item.label }}</span>
       </a>
     </li>
   </ul>

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { Router, RouterModule } from "@angular/router";
+import { RouterModule } from "@angular/router";
 import { CommonModule } from "@angular/common";
 
 @Component({
@@ -12,6 +12,9 @@ export class AdminSidebar {
   @Input() isOpen = false;
   @Input() isMobile = false;
   @Output() close = new EventEmitter<void>();
+  @Output() collapse = new EventEmitter<boolean>();
+
+  isCollapsed = false;
 
   navItems = [
     {
@@ -25,9 +28,13 @@ export class AdminSidebar {
     { label: "Users", icon: "bi bi-people", link: "/admin/users" },
   ];
 
-  constructor(private router: Router) {}
+  constructor() {}
 
   onNavClick() {
     if (this.isMobile) this.close.emit();
+  }
+  toggleCollapse() {
+    this.isCollapsed = !this.isCollapsed;
+    this.collapse.emit(this.isCollapsed);
   }
 }

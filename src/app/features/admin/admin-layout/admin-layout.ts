@@ -13,6 +13,7 @@ import { AdminHeader } from "../admin-header/admin-header";
 export class AdminLayout {
   sidebarOpen = false;
   isMobile = false;
+  isCollapsed = false;
 
   constructor() {
     this.checkScreen();
@@ -25,10 +26,13 @@ export class AdminLayout {
 
   checkScreen() {
     this.isMobile = window.innerWidth < 992;
-    this.sidebarOpen = !this.isMobile; // Desktop: open | Mobile: closed
+    this.sidebarOpen = !this.isMobile;
   }
 
   toggleSidebar() {
     this.sidebarOpen = !this.sidebarOpen;
+  }
+  onCollapse(state: boolean) {
+    this.isCollapsed = state;
   }
 }

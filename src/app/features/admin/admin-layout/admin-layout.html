@@ -14,12 +14,21 @@
     [isOpen]="sidebarOpen"
     [isMobile]="isMobile"
     (close)="toggleSidebar()"
+    (collapse)="onCollapse($event)"
   ></app-admin-sidebar>
 
   <!-- Main Content -->
   <main
     class="main-content"
-    [ngStyle]="{ 'margin-left': !isMobile && sidebarOpen ? '240px' : '0' }"
+    [ngStyle]="{
+      'margin-left': !isMobile
+        ? sidebarOpen
+          ? isCollapsed
+            ? '70px'
+            : '240px'
+          : '0'
+        : '0'
+    }"
   >
     <router-outlet></router-outlet>
   </main>
