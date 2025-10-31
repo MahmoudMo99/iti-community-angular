@@ -1,15 +1,15 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import Swal from 'sweetalert2';
-import { Track } from '../../../../core/services/track';
-import { Round } from '../../../../core/services/round';
+import { CommonModule } from "@angular/common";
+import { Component } from "@angular/core";
+import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
+import Swal from "sweetalert2";
+import { Track } from "../../../../core/services/track";
+import { Round } from "../../../../core/services/round";
 
 @Component({
-  selector: 'app-tracks-list',
+  selector: "app-tracks-list",
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './tracks-list.html',
-  styleUrl: './tracks-list.scss',
+  templateUrl: "./tracks-list.html",
+  styleUrl: "./tracks-list.scss",
 })
 export class TracksList {
   tracks: any[] = [];
@@ -27,8 +27,9 @@ export class TracksList {
     private roundService: Round
   ) {
     this.trackForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3)]],
-      round: ['', Validators.required],
+      name: ["", [Validators.required, Validators.minLength(3)]],
+      roundId: ["", Validators.required],
+      description: [""],
     });
   }
 
@@ -65,8 +66,8 @@ export class TracksList {
     action.subscribe({
       next: () => {
         Swal.fire({
-          icon: 'success',
-          title: this.isEditing ? 'Track Updated!' : 'Track Added!',
+          icon: "success",
+          title: this.isEditing ? "Track Updated!" : "Track Added!",
           timer: 1500,
           showConfirmButton: false,
         });
@@ -83,23 +84,24 @@ export class TracksList {
     this.editingId = track._id;
     this.trackForm.patchValue({
       name: track.name,
-      round: track.round?._id || '',
+      roundId: track.round?._id || "",
+      description: track.description || "",
     });
   }
 
   deleteTrack(id: string) {
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'This track will be permanently deleted!',
-      icon: 'warning',
+      title: "Are you sure?",
+      text: "This track will be permanently deleted!",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#a1171d',
-      cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonColor: "#a1171d",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
         this.trackService.deleteTrack(id).subscribe(() => {
-          Swal.fire('Deleted!', 'Track has been removed.', 'success');
+          Swal.fire("Deleted!", "Track has been removed.", "success");
           this.loadTracks();
         });
       }

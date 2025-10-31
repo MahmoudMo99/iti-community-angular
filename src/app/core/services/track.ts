@@ -1,12 +1,12 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class Track {
-  private baseUrl = 'http://localhost:4000/api/tracks';
+  private baseUrl = "http://localhost:4000/api/tracks";
 
   constructor(private http: HttpClient) {}
 

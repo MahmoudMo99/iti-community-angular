@@ -2,6 +2,7 @@ form {
   .form-control,
   .form-select {
     border-radius: 0.6rem;
+    transition: 0.2s ease;
     &:focus {
       border-color: #a1171d;
       box-shadow: 0 0 0 0.15rem rgba(161, 23, 29, 0.15);
@@ -9,6 +10,15 @@ form {
   }
 }
 
-.table-hover tbody tr:hover {
-  background-color: rgba(161, 23, 29, 0.05);
+.track-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(161, 23, 29, 0.15);
+  }
+
+  h5 {
+    font-size: 1.1rem;
+  }
 }

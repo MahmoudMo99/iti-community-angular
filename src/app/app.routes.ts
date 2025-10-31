@@ -18,6 +18,7 @@ import { CourseDetailsStudent } from "./features/student/course-details-student/
 import { MyColleagues } from "./features/student/my-colleagues/my-colleagues";
 import { authGuard } from "./core/guards/auth-guard";
 import { Home } from "./shared/home/home";
+import { CoursesList } from "./features/admin/courses/courses-list/courses-list";
 
 export const routes: Routes = [
   { path: "", redirectTo: "home", pathMatch: "full" },
@@ -33,7 +34,7 @@ export const routes: Routes = [
     data: { roles: ["Admin"] },
     children: [
       { path: "dashboard", component: Dashboard },
-      { path: "courses", component: Courses },
+      { path: "courses", component: CoursesList },
       { path: "courses/:id", component: CourseDetails },
       { path: "rounds", component: RoundsList },
       { path: "tracks", component: TracksList },

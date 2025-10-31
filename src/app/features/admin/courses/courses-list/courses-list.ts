@@ -1,17 +1,17 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import Swal from 'sweetalert2';
-import { Course } from '../../../../core/services/course';
-import { Track } from '../../../../core/services/track';
-import { Round } from '../../../../core/services/round';
-import { User } from '../../../../core/services/user';
+import { CommonModule } from "@angular/common";
+import { Component } from "@angular/core";
+import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
+import Swal from "sweetalert2";
+import { Course } from "../../../../core/services/course";
+import { Track } from "../../../../core/services/track";
+import { Round } from "../../../../core/services/round";
+import { User } from "../../../../core/services/user";
 
 @Component({
-  selector: 'app-courses-list',
+  selector: "app-courses-list",
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './courses-list.html',
-  styleUrl: './courses-list.scss',
+  templateUrl: "./courses-list.html",
+  styleUrl: "./courses-list.scss",
 })
 export class CoursesList {
   courses: any[] = [];
@@ -32,11 +32,11 @@ export class CoursesList {
     private userService: User
   ) {
     this.courseForm = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(3)]],
-      track: ['', Validators.required],
-      round: ['', Validators.required],
-      lectureInstructor: ['', Validators.required],
-      labInstructor: ['', Validators.required],
+      title: ["", [Validators.required, Validators.minLength(3)]],
+      track: ["", Validators.required],
+      round: ["", Validators.required],
+      lectureInstructor: ["", Validators.required],
+      labInstructor: ["", Validators.required],
     });
   }
 
@@ -75,8 +75,8 @@ export class CoursesList {
     action.subscribe({
       next: () => {
         Swal.fire({
-          icon: 'success',
-          title: this.isEditing ? 'Course Updated!' : 'Course Added!',
+          icon: "success",
+          title: this.isEditing ? "Course Updated!" : "Course Added!",
           timer: 1500,
           showConfirmButton: false,
         });
@@ -102,17 +102,17 @@ export class CoursesList {
 
   deleteCourse(id: string) {
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'This course will be permanently deleted!',
-      icon: 'warning',
+      title: "Are you sure?",
+      text: "This course will be permanently deleted!",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#a1171d',
-      cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonColor: "#a1171d",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
         this.courseService.deleteCourse(id).subscribe(() => {
-          Swal.fire('Deleted!', 'Course has been removed.', 'success');
+          Swal.fire("Deleted!", "Course has been removed.", "success");
           this.loadCourses();
         });
       }
