@@ -9,6 +9,7 @@
   <div class="card shadow-sm border-0 mb-4 rounded-4">
     <div class="card-body">
       <form [formGroup]="roundForm" (ngSubmit)="onSubmit()" class="row g-3">
+        <!-- Round Name -->
         <div class="col-md-4">
           <label class="form-label">Round Name</label>
           <input
@@ -16,9 +17,15 @@
             class="form-control"
             formControlName="name"
             placeholder="Enter round name"
+            [ngClass]="{
+              'is-valid':
+                roundForm.get('name')?.valid && roundForm.get('name')?.touched,
+              'is-invalid':
+                roundForm.get('name')?.invalid && roundForm.get('name')?.touched
+            }"
           />
           <div
-            class="text-danger small mt-1"
+            class="invalid-feedback"
             *ngIf="
               roundForm.get('name')?.invalid && roundForm.get('name')?.touched
             "
@@ -27,16 +34,61 @@
           </div>
         </div>
 
+        <!-- Start Date -->
         <div class="col-md-3">
           <label class="form-label">Start Date</label>
-          <input type="date" class="form-control" formControlName="startDate" />
+          <input
+            type="date"
+            class="form-control"
+            formControlName="startDate"
+            [ngClass]="{
+              'is-valid':
+                roundForm.get('startDate')?.valid &&
+                roundForm.get('startDate')?.touched,
+              'is-invalid':
+                roundForm.get('startDate')?.invalid &&
+                roundForm.get('startDate')?.touched
+            }"
+          />
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              roundForm.get('startDate')?.invalid &&
+              roundForm.get('startDate')?.touched
+            "
+          >
+            Start date is required
+          </div>
         </div>
 
+        <!-- End Date -->
         <div class="col-md-3">
           <label class="form-label">End Date</label>
-          <input type="date" class="form-control" formControlName="endDate" />
+          <input
+            type="date"
+            class="form-control"
+            formControlName="endDate"
+            [ngClass]="{
+              'is-valid':
+                roundForm.get('endDate')?.valid &&
+                roundForm.get('endDate')?.touched,
+              'is-invalid':
+                roundForm.get('endDate')?.invalid &&
+                roundForm.get('endDate')?.touched
+            }"
+          />
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              roundForm.get('endDate')?.invalid &&
+              roundForm.get('endDate')?.touched
+            "
+          >
+            End date is required
+          </div>
         </div>
 
+        <!-- Submit -->
         <div class="col-md-2 d-flex align-items-end">
           <button
             class="btn btn-danger w-100"
@@ -47,6 +99,7 @@
           </button>
         </div>
 
+        <!-- Cancel Edit -->
         <div *ngIf="isEditing" class="col-md-12 text-end">
           <button
             class="btn btn-secondary btn-sm"
@@ -60,56 +113,54 @@
     </div>
   </div>
 
-  <!-- Table Section -->
-  <div class="card shadow-sm border-0 rounded-4">
-    <div class="card-body">
-      <div *ngIf="loading" class="text-center py-4">
-        <div class="spinner-border text-danger"></div>
-      </div>
-
-      <table
-        class="table table-hover align-middle"
-        *ngIf="!loading && rounds.length"
-      >
-        <thead class="table-light">
-          <tr>
-            <th>#</th>
-            <th>Round Name</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th class="text-end">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let r of rounds; let i = index">
-            <td>{{ i + 1 }}</td>
-            <td>{{ r.name }}</td>
-            <td>{{ r.startDate | date }}</td>
-            <td>{{ r.endDate | date }}</td>
-            <td class="text-end">
-              <button
-                class="btn btn-outline-secondary btn-sm me-2"
-                (click)="editRound(r)"
-              >
-                <i class="bi bi-pencil"></i>
-              </button>
-              <button
-                class="btn btn-outline-danger btn-sm"
-                (click)="deleteRound(r._id)"
-              >
-                <i class="bi bi-trash"></i>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
+  <!-- Cards Section -->
+  <div class="row g-4" *ngIf="rounds">
+    <div class="col-md-6 col-lg-4" *ngFor="let r of rounds; let i = index">
       <div
-        *ngIf="!loading && !rounds.length"
-        class="text-center text-muted py-4"
+        class="round-card shadow-sm rounded-4 position-relative overflow-hidden"
       >
-        No rounds found.
+        <div class="badge bg-danger position-absolute top-0 end-0 m-3">
+          #{{ i + 1 }}
+        </div>
+
+        <div class="p-4">
+          <h5 class="fw-bold text-danger mb-2">
+            <i class="bi bi-bookmark me-2"></i>{{ r.name }}
+          </h5>
+
+          <ul class="list-unstyled small text-muted mb-3">
+            <li>
+              <i class="bi bi-calendar-event me-2"></i>Start:
+              {{ r.startDate | date }}
+            </li>
+            <li>
+              <i class="bi bi-calendar-check me-2"></i>End:
+              {{ r.endDate | date }}
+            </li>
+          </ul>
+
+          <div class="d-flex justify-content-end gap-2">
+            <button
+              class="btn btn-outline-secondary btn-sm"
+              (click)="editRound(r)"
+            >
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button
+              class="btn btn-outline-danger btn-sm"
+              (click)="deleteRound(r._id)"
+            >
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!rounds" class="text-center text-muted py-5">
+    <i class="bi bi-inboxes display-5 text-danger mb-3 d-block"></i>
+    <p>No rounds found yet. Try adding one</p>
   </div>
 </div>

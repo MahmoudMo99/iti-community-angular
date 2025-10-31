@@ -1,12 +1,12 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class Round {
-  private baseUrl = 'http://localhost:4000/api/rounds';
+  private baseUrl = "http://localhost:4000/api/rounds";
 
   constructor(private http: HttpClient) {}
 

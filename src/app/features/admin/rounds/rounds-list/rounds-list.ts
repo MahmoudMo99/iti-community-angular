@@ -17,7 +17,6 @@ export class RoundsList {
 
   isEditing = false;
   editingId: string | null = null;
-  loading = true;
 
   constructor(private fb: FormBuilder, private roundService: Round) {
     this.roundForm = this.fb.group({
@@ -32,14 +31,12 @@ export class RoundsList {
   }
 
   loadRounds() {
-    this.loading = true;
     this.roundService.getRounds().subscribe({
       next: (res) => {
         this.rounds = res;
-        this.loading = false;
       },
       error: () => {
-        this.loading = false;
+        this.rounds = [];
       },
     });
   }

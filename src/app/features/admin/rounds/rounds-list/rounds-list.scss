@@ -1,13 +1,81 @@
 form {
   .form-control {
     border-radius: 0.6rem;
+    transition: all 0.25s ease;
+
     &:focus {
       border-color: #a1171d;
       box-shadow: 0 0 0 0.15rem rgba(161, 23, 29, 0.15);
     }
+
+    &.is-valid {
+      border-color: #198754 !important;
+      box-shadow: 0 0 0 0.15rem rgba(25, 135, 84, 0.15);
+    }
+
+    &.is-invalid {
+      border-color: #dc3545 !important;
+      box-shadow: 0 0 0 0.15rem rgba(220, 53, 69, 0.15);
+    }
+  }
+
+  .invalid-feedback {
+    font-size: 0.85rem;
+    color: #dc3545;
   }
 }
 
-.table-hover tbody tr:hover {
-  background-color: rgba(161, 23, 29, 0.05);
+.round-card {
+  background: #fff;
+  border: 1px solid rgba(161, 23, 29, 0.08);
+  transition: all 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 25px rgba(161, 23, 29, 0.12);
+  }
+
+  h5 {
+    color: #a1171d;
+    display: flex;
+    align-items: center;
+  }
+
+  ul {
+    li {
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      i {
+        color: #a1171d;
+      }
+    }
+  }
+
+  .btn-outline-secondary,
+  .btn-outline-danger {
+    border-radius: 8px;
+    transition: 0.2s;
+  }
+
+  .btn-outline-secondary:hover {
+    background: #6c757d;
+    color: #fff;
+  }
+
+  .btn-outline-danger:hover {
+    background: #a1171d;
+    color: #fff;
+  }
+
+  .badge {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.7rem;
+    border-radius: 0.75rem;
+  }
+}
+
+.text-muted i {
+  opacity: 0.8;
 }
