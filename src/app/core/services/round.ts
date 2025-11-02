@@ -10,8 +10,25 @@ export class Round {
 
   constructor(private http: HttpClient) {}
 
-  getRounds(): Observable<any[]> {
-    return this.http.get<any[]>(this.baseUrl);
+  getRounds(
+    search: string = "",
+    startDate: string = "",
+    endDate: string = "",
+    page: number = 1,
+    limit: number = 9
+  ): Observable<any> {
+    let params = new URLSearchParams();
+
+    if (search) params.append("search", search);
+    if (startDate) params.append("startDate", startDate);
+    if (endDate) params.append("endDate", endDate);
+
+    params.append("page", page.toString());
+    params.append("limit", limit.toString());
+
+    const url = `${this.baseUrl}?${params.toString()}`;
+
+    return this.http.get<any>(url);
   }
 
   addRound(data: any): Observable<any> {

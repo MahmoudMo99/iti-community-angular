@@ -75,21 +75,25 @@
 
         <div class="col-md-2">
           <button
-            class="btn btn-danger px-4"
+            class="btn btn-danger w-100"
             type="submit"
             [disabled]="courseForm.invalid"
           >
             {{ isEditing ? "Update" : "Add Course" }}
           </button>
+        </div>
+
+        @if (isEditing) {
+        <div class="col-md-12 text-end">
           <button
-            *ngIf="isEditing"
-            class="btn btn-secondary ms-2"
+            class="btn btn-secondary btn-sm"
             type="button"
             (click)="cancelEdit()"
           >
-            Cancel
+            Cancel Edit
           </button>
         </div>
+        }
       </form>
     </div>
   </div>
