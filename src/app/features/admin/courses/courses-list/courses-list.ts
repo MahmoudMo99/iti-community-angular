@@ -34,9 +34,8 @@ export class CoursesList {
     this.courseForm = this.fb.group({
       title: ["", [Validators.required, Validators.minLength(3)]],
       track: ["", Validators.required],
-      round: ["", Validators.required],
-      lectureInstructor: ["", Validators.required],
-      labInstructor: ["", Validators.required],
+      lectureInstructor: [""],
+      labInstructor: [""],
     });
   }
 
@@ -123,5 +122,8 @@ export class CoursesList {
     this.isEditing = false;
     this.editingId = null;
     this.courseForm.reset();
+  }
+  scrollToForm() {
+    document.querySelector("form")?.scrollIntoView({ behavior: "smooth" });
   }
 }

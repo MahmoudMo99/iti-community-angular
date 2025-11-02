@@ -1,51 +1,56 @@
-<div class="container py-4">
-  <div class="d-flex align-items-center justify-content-between mb-4">
-    <h4 class="fw-bold text-danger">
-      <i class="bi bi-book me-2"></i> Manage Courses
-    </h4>
+<div class="container">
+  <div class="shared-header">
+    <h4><i class="bi bi-book"></i> Manage Courses</h4>
+
+    <button class="btn-add" (click)="scrollToForm()">
+      <i class="bi bi-plus-lg"></i> Add Course
+    </button>
   </div>
 
-  <!-- Form -->
   <div class="card shadow-sm border-0 mb-4 rounded-4">
     <div class="card-body">
-      <form [formGroup]="courseForm" (ngSubmit)="onSubmit()" class="row g-3">
-        <div class="col-md-4">
+      <form
+        [formGroup]="courseForm"
+        (ngSubmit)="onSubmit()"
+        class="row g-3 align-items-end"
+      >
+        <div class="col-md-3">
           <label class="form-label">Course Title</label>
           <input
             type="text"
             class="form-control"
             formControlName="title"
+            [ngClass]="{
+              'is-invalid':
+                courseForm.get('title')?.invalid &&
+                courseForm.get('title')?.touched,
+              'is-valid': courseForm.get('title')?.valid
+            }"
             placeholder="Enter course title"
           />
-          <div
-            class="text-danger small mt-1"
-            *ngIf="
-              courseForm.get('title')?.invalid &&
-              courseForm.get('title')?.touched
-            "
-          >
-            Title is required (min 3 chars)
+          <div class="invalid-feedback">
+            Course title is required (min 3 chars)
           </div>
         </div>
 
-        <div class="col-md-2">
-          <label class="form-label">Round</label>
-          <select class="form-select" formControlName="round">
-            <option value="">Select</option>
-            <option *ngFor="let r of rounds" [value]="r._id">
-              {{ r.name }}
-            </option>
-          </select>
-        </div>
-
-        <div class="col-md-2">
+        <div class="col-md-3">
           <label class="form-label">Track</label>
-          <select class="form-select" formControlName="track">
-            <option value="">Select</option>
+          <select
+            class="form-select"
+            formControlName="track"
+            [ngClass]="{
+              'is-invalid':
+                courseForm.get('track')?.invalid &&
+                courseForm.get('track')?.touched,
+              'is-valid': courseForm.get('track')?.valid
+            }"
+          >
+            <option value="">Select Track</option>
             <option *ngFor="let t of tracks" [value]="t._id">
               {{ t.name }}
             </option>
           </select>
+          <div class="invalid-feedback">Track is required</div>
         </div>
 
         <div class="col-md-2">
@@ -68,7 +73,7 @@
           </select>
         </div>
 
-        <div class="col-12 text-end mt-2">
+        <div class="col-md-2">
           <button
             class="btn btn-danger px-4"
             type="submit"
@@ -89,60 +94,53 @@
     </div>
   </div>
 
-  <!-- Table -->
-  <div class="card shadow-sm border-0 rounded-4">
-    <div class="card-body">
-      <div *ngIf="loading" class="text-center py-4">
-        <div class="spinner-border text-danger"></div>
-      </div>
+  <div class="row g-4" *ngIf="!loading && courses.length">
+    <div class="col-md-4" *ngFor="let c of courses; let i = index">
+      <div class="shared-card">
+        <div class="header">
+          <h5><i class="bi bi-book me-2"></i>{{ c.title }}</h5>
+          <span class="badge">#{{ i + 1 }}</span>
+        </div>
 
-      <table
-        class="table table-hover align-middle"
-        *ngIf="!loading && courses.length"
-      >
-        <thead class="table-light">
-          <tr>
-            <th>#</th>
-            <th>Title</th>
-            <th>Round</th>
-            <th>Track</th>
-            <th>Lecture Instructor</th>
-            <th>Lab Instructor</th>
-            <th class="text-end">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let c of courses; let i = index">
-            <td>{{ i + 1 }}</td>
-            <td>{{ c.title }}</td>
-            <td>{{ c.round?.name }}</td>
-            <td>{{ c.track?.name }}</td>
-            <td>{{ c.lectureInstructor?.name }}</td>
-            <td>{{ c.labInstructor?.name }}</td>
-            <td class="text-end">
-              <button
-                class="btn btn-outline-secondary btn-sm me-2"
-                (click)="editCourse(c)"
-              >
-                <i class="bi bi-pencil"></i>
-              </button>
-              <button
-                class="btn btn-outline-danger btn-sm"
-                (click)="deleteCourse(c._id)"
-              >
-                <i class="bi bi-trash"></i>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+        <p class="info">
+          <i class="bi bi-diagram-3"></i> Track: {{ c.track?.name || "-" }}
+        </p>
+        <p class="info">
+          <i class="bi bi-calendar-event"></i> Round:
+          {{ c.track?.round?.name || "-" }}
+        </p>
+        <p class="info">
+          <i class="bi bi-person-video3"></i> Lecture:
+          {{ c.lectureInstructor?.name || "-" }}
+        </p>
+        <p class="info">
+          <i class="bi bi-person-workspace"></i> Lab:
+          {{ c.labInstructor?.name || "-" }}
+        </p>
 
-      <div
-        *ngIf="!loading && !courses.length"
-        class="text-center text-muted py-4"
-      >
-        No courses found.
+        <div class="actions">
+          <button
+            class="btn btn-outline-secondary btn-sm"
+            (click)="editCourse(c)"
+          >
+            <i class="bi bi-pencil"></i>
+          </button>
+          <button
+            class="btn btn-outline-danger btn-sm"
+            (click)="deleteCourse(c._id)"
+          >
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
       </div>
     </div>
+  </div>
+
+  <div *ngIf="!loading && !courses.length" class="text-center text-muted py-4">
+    No courses found.
+  </div>
+
+  <div *ngIf="loading" class="text-center py-4">
+    <div class="spinner-border text-danger"></div>
   </div>
 </div>

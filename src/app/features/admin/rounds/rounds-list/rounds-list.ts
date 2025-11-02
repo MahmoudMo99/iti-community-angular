@@ -101,4 +101,7 @@ export class RoundsList {
     this.editingId = null;
     this.roundForm.reset();
   }
+  scrollToForm() {
+    document.querySelector("form")?.scrollIntoView({ behavior: "smooth" });
+  }
 }

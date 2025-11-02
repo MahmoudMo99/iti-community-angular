@@ -113,4 +113,7 @@ export class TracksList {
     this.editingId = null;
     this.trackForm.reset();
   }
+  scrollToForm() {
+    document.querySelector("form")?.scrollIntoView({ behavior: "smooth" });
+  }
 }

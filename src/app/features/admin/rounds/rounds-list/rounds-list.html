@@ -1,8 +1,10 @@
 <div class="container">
-  <div class="d-flex align-items-center justify-content-between mb-4">
-    <h4 class="fw-bold text-danger">
-      <i class="bi bi-calendar-event me-2"></i> Manage Rounds
-    </h4>
+  <div class="shared-header">
+    <h4><i class="bi bi-calendar-event"></i> Manage Rounds</h4>
+
+    <button class="btn-add" (click)="scrollToForm()">
+      <i class="bi bi-plus-lg"></i> Add Round
+    </button>
   </div>
 
   <div class="card shadow-sm border-0 mb-4 rounded-4">
@@ -102,54 +104,36 @@
 
   @if (rounds) {
   <div class="row g-4">
-    @for( r of rounds ; track r._id ; let i = $index){
-    <div class="col-md-6 col-lg-4">
-      <div
-        class="round-card shadow-sm rounded-4 position-relative overflow-hidden"
-      >
-        <div class="badge bg-danger position-absolute top-0 end-0 m-3">
-          #{{ i + 1 }}
+    <div class="col-md-6 col-lg-4" *ngFor="let r of rounds; let i = index">
+      <div class="shared-card">
+        <div class="header">
+          <h5><i class="bi bi-bookmark me-2"></i>{{ r.name }}</h5>
+          <span class="badge">#{{ i + 1 }}</span>
         </div>
 
-        <div class="p-4">
-          <h5 class="fw-bold text-danger mb-2">
-            <i class="bi bi-bookmark me-2"></i>{{ r.name }}
-          </h5>
+        <p class="info">
+          <i class="bi bi-calendar-event"></i> Start: {{ r.startDate | date }}
+        </p>
+        <p class="info">
+          <i class="bi bi-calendar-check"></i> End: {{ r.endDate | date }}
+        </p>
 
-          <ul class="list-unstyled small text-muted mb-3">
-            <li>
-              <i class="bi bi-calendar-event me-2"></i>Start:
-              {{ r.startDate | date }}
-            </li>
-            <li>
-              <i class="bi bi-calendar-check me-2"></i>End:
-              {{ r.endDate | date }}
-            </li>
-          </ul>
-
-          <div class="d-flex justify-content-end gap-2">
-            <button
-              class="btn btn-outline-secondary btn-sm"
-              (click)="editRound(r)"
-            >
-              <i class="bi bi-pencil"></i>
-            </button>
-            <button
-              class="btn btn-outline-danger btn-sm"
-              (click)="deleteRound(r._id)"
-            >
-              <i class="bi bi-trash"></i>
-            </button>
-          </div>
+        <div class="actions">
+          <button
+            class="btn btn-outline-secondary btn-sm"
+            (click)="editRound(r)"
+          >
+            <i class="bi bi-pencil"></i>
+          </button>
+          <button
+            class="btn btn-outline-danger btn-sm"
+            (click)="deleteRound(r._id)"
+          >
+            <i class="bi bi-trash"></i>
+          </button>
         </div>
       </div>
     </div>
-    } @empty {
-    <div class="text-center text-muted py-5">
-      <i class="bi bi-inboxes display-5 text-danger mb-3 d-block"></i>
-      <p>No rounds found yet. Try adding one</p>
-    </div>
-    }
   </div>
   }
 </div>

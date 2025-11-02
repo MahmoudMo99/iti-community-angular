@@ -1,8 +1,10 @@
 <div class="container">
-  <div class="d-flex align-items-center justify-content-between mb-4">
-    <h4 class="fw-bold text-danger">
-      <i class="bi bi-diagram-3 me-2"></i> Manage Tracks
-    </h4>
+  <div class="shared-header">
+    <h4><i class="bi bi-diagram-3"></i> Manage Tracks</h4>
+
+    <button class="btn-add" (click)="scrollToForm()">
+      <i class="bi bi-plus-lg"></i> Add Track
+    </button>
   </div>
 
   <div class="card shadow-sm border-0 mb-4 rounded-4">
@@ -95,44 +97,33 @@
 
   @if (tracks) {
   <div class="row g-3">
-    @for (t of tracks; track $index ; let i = $index) {
-    <div class="col-md-4">
-      <div class="card border-0 shadow-sm rounded-4 h-100 track-card">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <h5 class="fw-bold mb-0 text-danger">{{ t.name }}</h5>
-            <span class="badge bg-light text-danger border">
-              {{ t.round?.name || "No Round" }}
-            </span>
-          </div>
-          @if (t.description) {
-          <p class="text-muted small mb-3">
-            {{ t.description }}
-          </p>
-          }
-          <div class="d-flex justify-content-end">
-            <button
-              class="btn btn-outline-secondary btn-sm me-2"
-              (click)="editTrack(t)"
-            >
-              <i class="bi bi-pencil"></i>
-            </button>
-            <button
-              class="btn btn-outline-danger btn-sm"
-              (click)="deleteTrack(t._id)"
-            >
-              <i class="bi bi-trash"></i>
-            </button>
-          </div>
+    <div class="col-md-4" *ngFor="let t of tracks">
+      <div class="shared-card">
+        <div class="header">
+          <h5><i class="bi bi-diagram-3 me-2"></i>{{ t.name }}</h5>
+          <span class="badge">{{ t.round?.name || "No Round" }}</span>
+        </div>
+
+        <p class="info" *ngIf="t.description">
+          <i class="bi bi-info-circle"></i> {{ t.description }}
+        </p>
+
+        <div class="actions">
+          <button
+            class="btn btn-outline-secondary btn-sm"
+            (click)="editTrack(t)"
+          >
+            <i class="bi bi-pencil"></i>
+          </button>
+          <button
+            class="btn btn-outline-danger btn-sm"
+            (click)="deleteTrack(t._id)"
+          >
+            <i class="bi bi-trash"></i>
+          </button>
         </div>
       </div>
     </div>
-    } @empty {
-    <div class="text-center text-muted py-5">
-      <i class="bi bi-inboxes display-5 text-danger mb-3 d-block"></i>
-      <p>No tracks found yet. Try adding one</p>
-    </div>
-    }
   </div>
   }
 </div>

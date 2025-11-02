@@ -27,3 +27,109 @@ select,
 textarea {
   box-shadow: none !important;
 }
+
+.shared-card {
+  background: #fff;
+  border: 1px solid rgba(161, 23, 29, 0.1);
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(161, 23, 29, 0.05);
+  transition: all 0.3s ease;
+  padding: 1.5rem;
+  position: relative;
+  height: 100%;
+
+  &:hover {
+    transform: translateY(-5px);
+    border-color: rgba(161, 23, 29, 0.25);
+    box-shadow: 0 8px 20px rgba(161, 23, 29, 0.15);
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+
+    h5 {
+      font-weight: 700;
+      color: #a1171d;
+      margin: 0;
+    }
+
+    .badge {
+      background: #f8f9fa;
+      color: #a1171d;
+      border: 1px solid rgba(161, 23, 29, 0.2);
+    }
+  }
+
+  .info {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+
+    i {
+      color: #a1171d;
+      margin-right: 0.4rem;
+    }
+  }
+
+  .actions {
+    display: flex;
+    justify-content: end;
+    gap: 0.5rem;
+    margin-top: 1rem;
+
+    button {
+      border-radius: 50%;
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+.shared-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  h4 {
+    font-weight: 700;
+    color: #a1171d;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0;
+
+    i {
+      font-size: 1.4rem;
+    }
+  }
+
+  .btn-add {
+    background-color: #a1171d;
+    color: #fff;
+    border: none;
+    border-radius: 0.6rem;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: #7d1217;
+    }
+
+    i {
+      font-size: 1.1rem;
+    }
+  }
+}
