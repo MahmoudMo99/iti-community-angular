@@ -2,52 +2,61 @@
   <div class="shared-header">
     <h4><i class="bi bi-calendar-event"></i> Manage Rounds</h4>
     <button class="btn-add" (click)="openModal()">
-      <i class="bi bi-plus-lg"></i> Add Round
+      <i class="bi bi-plus-lg"></i> Round
     </button>
   </div>
 
-  <!-- Filters: Search + Date Range -->
-  <div class="d-flex flex-wrap gap-2 mb-3 align-items-center">
-    <!-- Search box -->
-    <div class="input-group search-box flex-grow-1">
-      <span class="input-group-text bg-white border-end-0">
-        <i class="bi bi-search text-danger"></i>
-      </span>
-      <input
-        type="text"
-        class="form-control border-start-0"
-        placeholder="Search rounds..."
-        [(ngModel)]="searchTerm"
-        (input)="onFilterChange()"
-      />
-    </div>
+  <div class="mb-4">
+    <div class="row g-3 align-items-center">
+      <div class="col-12 col-md-6">
+        <div class="input-group search-box">
+          <span class="input-group-text bg-white border-end-0">
+            <i class="bi bi-search text-danger"></i>
+          </span>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Search rounds..."
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="searchChanged.next($event)"
+          />
+        </div>
+      </div>
 
-    <!-- Start Date filter -->
-    <div class="d-flex align-items-center">
-      <label class="me-2 text-muted fw-semibold small">Start:</label>
-      <input
-        type="date"
-        class="form-control"
-        [(ngModel)]="filterStartDate"
-        (change)="onFilterChange()"
-      />
-    </div>
+      <div class="col-6 col-md-3">
+        <div
+          class="d-flex flex-column flex-md-row align-items-start align-items-md-center"
+        >
+          <label class="me-2 text-muted fw-semibold small">Start:</label>
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="filterStartDate"
+            (change)="onFilterChange()"
+          />
+        </div>
+      </div>
 
-    <!-- End Date filter -->
-    <div class="d-flex align-items-center">
-      <label class="me-2 text-muted fw-semibold small">End:</label>
-      <input
-        type="date"
-        class="form-control"
-        [(ngModel)]="filterEndDate"
-        (change)="onFilterChange()"
-      />
+      <div class="col-6 col-md-3">
+        <div
+          class="d-flex flex-column flex-md-row align-items-start align-items-md-center"
+        >
+          <label class="me-2 text-muted fw-semibold small">End:</label>
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="filterEndDate"
+            (change)="onFilterChange()"
+          />
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Rounds list -->
-  <div *ngIf="rounds.length" class="row g-4">
-    <div class="col-md-6 col-lg-4" *ngFor="let r of rounds">
+  @if( rounds ){
+  <div class="row g-4">
+    @for(r of rounds ; track r._id ; let i = $index){
+    <div class="col-md-6 col-lg-4">
       <div class="shared-card">
         <div class="header">
           <h5><i class="bi bi-bookmark me-2"></i>{{ r.name }}</h5>
@@ -79,22 +88,22 @@
         </div>
       </div>
     </div>
+    } @empty{
+    <div class="text-center text-muted py-5">
+      <i class="bi bi-inboxes display-5 text-danger mb-3 d-block"></i>
+      <p>No rounds found.</p>
+    </div>
+    }
   </div>
 
-  <!-- No rounds -->
-  <div *ngIf="!rounds.length" class="text-center text-muted py-5">
-    <i class="bi bi-inboxes display-5 text-danger mb-3 d-block"></i>
-    <p>No rounds found.</p>
-  </div>
-
-  <!-- Load More Button -->
-  <div class="text-center my-4" *ngIf="hasMore">
+  } @if(hasMore){
+  <div class="text-center my-4">
     <button class="btn btn-outline-danger" (click)="loadMore()">
       Load More
     </button>
   </div>
+  }
 
-  <!-- Modal -->
   <div
     #modal
     class="modal fade"
@@ -127,7 +136,21 @@
                 class="form-control"
                 formControlName="name"
                 placeholder="Enter round name"
+                [ngClass]="{
+                  'is-valid':
+                    roundForm.get('name')?.valid &&
+                    roundForm.get('name')?.touched,
+                  'is-invalid':
+                    roundForm.get('name')?.invalid &&
+                    roundForm.get('name')?.touched
+                }"
               />
+              @if ( roundForm.get('name')?.invalid &&
+              roundForm.get('name')?.touched) {
+              <div class="invalid-feedback">
+                Round name is required (min 3 chars)
+              </div>
+              }
             </div>
 
             <div class="mb-3">
@@ -136,7 +159,19 @@
                 type="date"
                 class="form-control"
                 formControlName="startDate"
+                [ngClass]="{
+                  'is-valid':
+                    roundForm.get('startDate')?.valid &&
+                    roundForm.get('startDate')?.touched,
+                  'is-invalid':
+                    roundForm.get('startDate')?.invalid &&
+                    roundForm.get('startDate')?.touched
+                }"
               />
+              @if ( roundForm.get('startDate')?.invalid &&
+              roundForm.get('startDate')?.touched) {
+              <div class="invalid-feedback">Start date is required</div>
+              }
             </div>
 
             <div class="mb-3">
@@ -145,7 +180,19 @@
                 type="date"
                 class="form-control"
                 formControlName="endDate"
+                [ngClass]="{
+                  'is-valid':
+                    roundForm.get('endDate')?.valid &&
+                    roundForm.get('endDate')?.touched,
+                  'is-invalid':
+                    roundForm.get('endDate')?.invalid &&
+                    roundForm.get('endDate')?.touched
+                }"
               />
+              @if ( roundForm.get('endDate')?.invalid &&
+              roundForm.get('endDate')?.touched) {
+              <div class="invalid-feedback">End date is required</div>
+              }
             </div>
           </div>
 

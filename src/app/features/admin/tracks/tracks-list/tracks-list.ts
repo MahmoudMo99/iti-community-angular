@@ -1,25 +1,49 @@
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  AfterViewInit,
+  OnDestroy,
+} from "@angular/core";
+import {
+  FormBuilder,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from "@angular/forms";
 import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
-import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import Swal from "sweetalert2";
+import { debounceTime, distinctUntilChanged, Subject } from "rxjs";
 import { Track } from "../../../../core/services/track";
 import { Round } from "../../../../core/services/round";
 
+declare var bootstrap: any;
+
 @Component({
   selector: "app-tracks-list",
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: "./tracks-list.html",
   styleUrl: "./tracks-list.scss",
 })
-export class TracksList {
+export class TracksList implements AfterViewInit, OnDestroy {
+  @ViewChild("modal") modalElement!: ElementRef;
+  bsModal: any;
+
   tracks: any[] = [];
   rounds: any[] = [];
+  totalItems = 0;
+  hasMore = false;
+  currentPage = 1;
+  itemsPerPage = 6;
+
+  searchTerm = "";
+  selectedRound = "";
+
+  searchChanged = new Subject<string>();
 
   trackForm: any;
-
   isEditing = false;
   editingId: string | null = null;
-  loading = true;
 
   constructor(
     private fb: FormBuilder,
@@ -33,32 +57,82 @@ export class TracksList {
     });
   }
 
-  ngOnInit() {
-    this.loadTracks();
-    this.loadRounds();
+  ngAfterViewInit() {
+    this.bsModal = new bootstrap.Modal(this.modalElement.nativeElement);
   }
 
-  loadTracks() {
-    this.loading = true;
-    this.trackService.getTracks().subscribe({
-      next: (res) => {
-        this.tracks = res;
-        this.loading = false;
-      },
-      error: () => (this.loading = false),
-    });
+  ngOnDestroy() {
+    if (this.bsModal) this.bsModal.dispose();
+  }
+
+  ngOnInit() {
+    this.loadRounds();
+    this.loadTracks();
+
+    this.searchChanged
+      .pipe(debounceTime(400), distinctUntilChanged())
+      .subscribe(() => this.applyFilters());
   }
 
   loadRounds() {
-    this.roundService.getRounds().subscribe({
-      next: (res) => (this.rounds = res),
+    this.roundService.getRounds().subscribe((res: any) => {
+      this.rounds = res.rounds || res; // لتوافق مع API rounds
     });
+  }
+
+  loadTracks() {
+    this.trackService
+      .getTracks(
+        this.searchTerm,
+        this.selectedRound,
+        this.currentPage,
+        this.itemsPerPage
+      )
+      .subscribe({
+        next: (res: any) => {
+          const newTracks = res.tracks.map((t: any, idx: number) => ({
+            ...t,
+            index: this.tracks.length + idx + 1,
+          }));
+          this.tracks = [...this.tracks, ...newTracks];
+          this.totalItems = res.total;
+          this.hasMore = this.tracks.length < this.totalItems;
+        },
+        error: () => {
+          this.tracks = [];
+          this.hasMore = false;
+        },
+      });
+  }
+
+  applyFilters() {
+    this.currentPage = 1;
+    this.tracks = [];
+    this.loadTracks();
+  }
+
+  loadMore() {
+    this.currentPage++;
+    this.loadTracks();
+  }
+
+  openModal() {
+    this.isEditing = false;
+    this.trackForm.reset();
+    this.bsModal.show();
+  }
+
+  closeModal() {
+    this.bsModal.hide();
+    this.trackForm.reset();
+    this.isEditing = false;
+    this.editingId = null;
   }
 
   onSubmit() {
     if (this.trackForm.invalid) return;
-    const data = this.trackForm.value;
 
+    const data = this.trackForm.value;
     const action = this.isEditing
       ? this.trackService.updateTrack(this.editingId!, data)
       : this.trackService.addTrack(data);
@@ -71,11 +145,9 @@ export class TracksList {
           timer: 1500,
           showConfirmButton: false,
         });
-        this.trackForm.reset();
-        this.isEditing = false;
-        this.loadTracks();
+        this.applyFilters();
+        this.closeModal();
       },
-      error: (err) => console.error(err),
     });
   }
 
@@ -87,6 +159,7 @@ export class TracksList {
       roundId: track.round?._id || "",
       description: track.description || "",
     });
+    this.bsModal.show();
   }
 
   deleteTrack(id: string) {
@@ -102,18 +175,9 @@ export class TracksList {
       if (result.isConfirmed) {
         this.trackService.deleteTrack(id).subscribe(() => {
           Swal.fire("Deleted!", "Track has been removed.", "success");
-          this.loadTracks();
+          this.applyFilters();
         });
       }
     });
-  }
-
-  cancelEdit() {
-    this.isEditing = false;
-    this.editingId = null;
-    this.trackForm.reset();
-  }
-  scrollToForm() {
-    document.querySelector("form")?.scrollIntoView({ behavior: "smooth" });
   }
 }

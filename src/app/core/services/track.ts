@@ -10,8 +10,21 @@ export class Track {
 
   constructor(private http: HttpClient) {}
 
-  getTracks(): Observable<any[]> {
-    return this.http.get<any[]>(this.baseUrl);
+  getTracks(
+    search: string = "",
+    roundId: string = "",
+    page: number = 1,
+    limit: number = 9
+  ): Observable<any> {
+    let params = new URLSearchParams();
+
+    if (search) params.append("search", search);
+    if (roundId) params.append("roundId", roundId);
+    params.append("page", page.toString());
+    params.append("limit", limit.toString());
+
+    const url = `${this.baseUrl}?${params.toString()}`;
+    return this.http.get<any>(url);
   }
 
   addTrack(data: any): Observable<any> {

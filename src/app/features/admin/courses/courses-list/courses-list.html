@@ -1,125 +1,113 @@
 <div class="container">
   <div class="shared-header">
     <h4><i class="bi bi-book"></i> Manage Courses</h4>
-
-    <button class="btn-add" (click)="scrollToForm()">
-      <i class="bi bi-plus-lg"></i> Add Course
+    <button class="btn-add" (click)="openModal()">
+      <i class="bi bi-plus-lg"></i> Course
     </button>
   </div>
 
-  <div class="card shadow-sm border-0 mb-4 rounded-4">
-    <div class="card-body">
-      <form
-        [formGroup]="courseForm"
-        (ngSubmit)="onSubmit()"
-        class="row g-3 align-items-end"
-      >
-        <div class="col-md-3">
-          <label class="form-label">Course Title</label>
+  <div class="mb-4">
+    <div class="row g-3 align-items-center">
+      <div class="col-12 col-md-6">
+        <div class="input-group search-box">
+          <span class="input-group-text bg-white border-end-0">
+            <i class="bi bi-search text-danger"></i>
+          </span>
           <input
             type="text"
             class="form-control"
-            formControlName="title"
-            [ngClass]="{
-              'is-invalid':
-                courseForm.get('title')?.invalid &&
-                courseForm.get('title')?.touched,
-              'is-valid': courseForm.get('title')?.valid
-            }"
-            placeholder="Enter course title"
+            placeholder="Search courses..."
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="searchChanged.next($event)"
           />
-          <div class="invalid-feedback">
-            Course title is required (min 3 chars)
-          </div>
         </div>
+      </div>
 
-        <div class="col-md-3">
-          <label class="form-label">Track</label>
+      <!-- Track Filter -->
+      <div class="col-12 col-md-6">
+        <div
+          class="d-flex flex-column flex-md-row align-items-start align-items-md-center"
+        >
+          <label class="me-2 text-muted fw-semibold small">Track:</label>
           <select
             class="form-select"
-            formControlName="track"
-            [ngClass]="{
-              'is-invalid':
-                courseForm.get('track')?.invalid &&
-                courseForm.get('track')?.touched,
-              'is-valid': courseForm.get('track')?.valid
-            }"
+            [(ngModel)]="selectedTrack"
+            (change)="applyFilters()"
           >
-            <option value="">Select Track</option>
-            <option *ngFor="let t of tracks" [value]="t._id">
-              {{ t.name }}
-            </option>
-          </select>
-          <div class="invalid-feedback">Track is required</div>
-        </div>
-
-        <div class="col-md-2">
-          <label class="form-label">Lecture Instructor</label>
-          <select class="form-select" formControlName="lectureInstructor">
-            <option value="">Select</option>
-            <option *ngFor="let i of instructors" [value]="i._id">
-              {{ i.name }}
-            </option>
+            <option value="">All Tracks</option>
+            @for (t of tracks; track $index) {
+            <option [value]="t._id">{{ t.name }}</option>
+            }
           </select>
         </div>
+      </div>
 
-        <div class="col-md-2">
-          <label class="form-label">Lab Instructor</label>
-          <select class="form-select" formControlName="labInstructor">
-            <option value="">Select</option>
-            <option *ngFor="let i of instructors" [value]="i._id">
-              {{ i.name }}
-            </option>
-          </select>
-        </div>
-
-        <div class="col-md-2">
-          <button
-            class="btn btn-danger w-100"
-            type="submit"
-            [disabled]="courseForm.invalid"
+      <!-- Lecture Instructor Filter -->
+      <div class="col-12 col-md-4">
+        <label class="form-label fw-semibold">Lecture Instructor</label>
+        <select
+          class="form-select"
+          [(ngModel)]="lectureInstructorFilter"
+          (change)="applyFilters()"
+        >
+          <option value="">All Lecture Instructors</option>
+          <option
+            *ngFor="let instructor of instructors"
+            [value]="instructor._id"
           >
-            {{ isEditing ? "Update" : "Add Course" }}
-          </button>
-        </div>
+            {{ instructor.name }}
+          </option>
+        </select>
+      </div>
 
-        @if (isEditing) {
-        <div class="col-md-12 text-end">
-          <button
-            class="btn btn-secondary btn-sm"
-            type="button"
-            (click)="cancelEdit()"
+      <!-- Lab Instructor Filter -->
+      <div class="col-12 col-md-4">
+        <label class="form-label fw-semibold">Lab Instructor</label>
+        <select
+          class="form-select"
+          [(ngModel)]="labInstructorFilter"
+          (change)="applyFilters()"
+        >
+          <option value="">All Lab Instructors</option>
+          <option
+            *ngFor="let instructor of instructors"
+            [value]="instructor._id"
           >
-            Cancel Edit
-          </button>
-        </div>
-        }
-      </form>
+            {{ instructor.name }}
+          </option>
+        </select>
+      </div>
     </div>
   </div>
 
-  <div class="row g-4" *ngIf="!loading && courses.length">
-    <div class="col-md-4" *ngFor="let c of courses; let i = index">
+  <!-- Courses Cards -->
+  @if (courses) {
+  <div class="row g-4">
+    @for (c of courses; track c._id; let i = $index) {
+    <div class="col-md-6 col-lg-4">
       <div class="shared-card">
         <div class="header">
           <h5><i class="bi bi-book me-2"></i>{{ c.title }}</h5>
-          <span class="badge">#{{ i + 1 }}</span>
+          <span class="badge">{{ c.track?.name || "No Track" }}</span>
         </div>
 
-        <p class="info">
-          <i class="bi bi-diagram-3"></i> Track: {{ c.track?.name || "-" }}
-        </p>
-        <p class="info">
+        <p class="info" *ngIf="c.track?.round">
           <i class="bi bi-calendar-event"></i> Round:
           {{ c.track?.round?.name || "-" }}
         </p>
-        <p class="info">
+
+        <p class="info" *ngIf="c.lectureInstructor">
           <i class="bi bi-person-video3"></i> Lecture:
-          {{ c.lectureInstructor?.name || "-" }}
+          {{ c.lectureInstructor?.name }}
         </p>
-        <p class="info">
+
+        <p class="info" *ngIf="c.labInstructor">
           <i class="bi bi-person-workspace"></i> Lab:
-          {{ c.labInstructor?.name || "-" }}
+          {{ c.labInstructor?.name }}
+        </p>
+
+        <p class="info" *ngIf="c.description">
+          <i class="bi bi-info-circle"></i> {{ c.description }}
         </p>
 
         <div class="actions">
@@ -138,13 +126,144 @@
         </div>
       </div>
     </div>
+    } @empty {
+    <div class="text-center text-muted py-5">
+      <i class="bi bi-inboxes display-5 text-danger mb-3 d-block"></i>
+      <p>No courses found.</p>
+    </div>
+    }
   </div>
-
-  <div *ngIf="!loading && !courses.length" class="text-center text-muted py-4">
-    No courses found.
+  } @if(hasMore){
+  <div class="text-center my-4">
+    <button class="btn btn-outline-danger" (click)="loadMore()">
+      Load More
+    </button>
   </div>
+  }
 
-  <div *ngIf="loading" class="text-center py-4">
-    <div class="spinner-border text-danger"></div>
+  <!-- Modal -->
+  <div
+    #modal
+    class="modal fade"
+    tabindex="-1"
+    aria-hidden="true"
+    role="dialog"
+    id="courseModal"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4 shadow">
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold text-danger">
+            <i class="bi bi-book me-2"></i>
+            {{ isEditing ? "Edit Course" : "Add New Course" }}
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="closeModal()"
+          ></button>
+        </div>
+
+        <form [formGroup]="courseForm" (ngSubmit)="onSubmit()">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label">Course Title</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="title"
+                placeholder="Enter course title"
+                [ngClass]="{
+                  'is-valid':
+                    courseForm.get('name')?.valid &&
+                    courseForm.get('name')?.touched,
+                  'is-invalid':
+                    courseForm.get('name')?.invalid &&
+                    courseForm.get('name')?.touched
+                }"
+              />
+              @if ( courseForm.get('name')?.invalid &&
+              courseForm.get('name')?.touched) {
+              <div class="invalid-feedback">
+                Round name is required (min 3 chars)
+              </div>
+              }
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Select Track</label>
+              <select
+                class="form-select"
+                formControlName="track"
+                [ngClass]="{
+                  'is-valid':
+                    courseForm.get('track')?.valid &&
+                    courseForm.get('track')?.touched,
+                  'is-invalid':
+                    courseForm.get('track')?.invalid &&
+                    courseForm.get('track')?.touched
+                }"
+              >
+                @for (t of tracks; track $index) {
+                <option [value]="t._id">{{ t.name }}</option>
+                }
+              </select>
+              @if ( courseForm.get('track')?.invalid &&
+              courseForm.get('track')?.touched) {
+              <div class="invalid-feedback">Track is required</div>
+              }
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Lecture Instructor</label>
+              <select class="form-select" formControlName="lectureInstructor">
+                <option value="">Optional</option>
+                @for (i of instructors; track i._id) {
+                <option [value]="i._id">{{ i.name }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Lab Instructor</label>
+              <select class="form-select" formControlName="labInstructor">
+                <option value="">Optional</option>
+                @for (i of instructors; track i._id) {
+                <option [value]="i._id">{{ i.name }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Description</label>
+              <textarea
+                class="form-control"
+                formControlName="description"
+                rows="2"
+                placeholder="Optional description"
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="modal-footer border-0">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="closeModal()"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="btn btn-danger"
+              [disabled]="courseForm.invalid"
+            >
+              {{ isEditing ? "Update" : "Add" }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </div>

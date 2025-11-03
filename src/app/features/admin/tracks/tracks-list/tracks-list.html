@@ -1,112 +1,64 @@
 <div class="container">
   <div class="shared-header">
     <h4><i class="bi bi-diagram-3"></i> Manage Tracks</h4>
-
-    <button class="btn-add" (click)="scrollToForm()">
-      <i class="bi bi-plus-lg"></i> Add Track
+    <button class="btn-add" (click)="openModal()">
+      <i class="bi bi-plus-lg"></i> Track
     </button>
   </div>
 
-  <div class="card shadow-sm border-0 mb-4 rounded-4">
-    <div class="card-body">
-      <form [formGroup]="trackForm" (ngSubmit)="onSubmit()" class="row g-3">
-        <div class="col-md-3">
-          <label class="form-label fw-semibold">Track Name</label>
+  <div class="mb-4">
+    <div class="row g-3 align-items-center">
+      <div class="col-12 col-md-6">
+        <div class="input-group search-box">
+          <span class="input-group-text bg-white border-end-0">
+            <i class="bi bi-search text-danger"></i>
+          </span>
           <input
             type="text"
             class="form-control"
-            formControlName="name"
-            placeholder="Enter track name"
-            [ngClass]="{
-              'is-valid':
-                trackForm.get('name')?.valid && trackForm.get('name')?.touched,
-              'is-invalid':
-                trackForm.get('name')?.invalid && trackForm.get('name')?.touched
-            }"
+            placeholder="Search tracks..."
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="searchChanged.next($event)"
           />
-          @if ( trackForm.get('name')?.invalid &&
-          trackForm.get('name')?.touched) {
-          <div class="invalid-feedback">
-            Track name is required (min 3 chars)
-          </div>
-          }
         </div>
+      </div>
 
-        <div class="col-md-3">
-          <label class="form-label fw-semibold">Select Round</label>
+      <!-- Round Filter -->
+      <div class="col-12 col-md-6">
+        <div
+          class="d-flex flex-column flex-md-row align-items-start align-items-md-center"
+        >
+          <label class="me-2 text-muted fw-semibold small">Round:</label>
           <select
             class="form-select"
-            formControlName="roundId"
-            [ngClass]="{
-              'is-valid':
-                trackForm.get('roundId')?.valid &&
-                trackForm.get('roundId')?.touched,
-              'is-invalid':
-                trackForm.get('roundId')?.invalid &&
-                trackForm.get('roundId')?.touched
-            }"
+            [(ngModel)]="selectedRound"
+            (change)="applyFilters()"
           >
-            <option value="" disabled>Select Round</option>
-
-            @for ( r of rounds; track $index) {
-            <option [value]="r._id">
-              {{ r.name }}
-            </option>
+            <option value="">All Rounds</option>
+            @for (r of rounds; track $index) {
+            <option [value]="r._id">{{ r.name }}</option>
             }
           </select>
-
-          @if ( trackForm.get('roundId')?.invalid &&
-          trackForm.get('roundId')?.touched) {
-          <div class="invalid-feedback">Round is required</div>
-          }
         </div>
-        <div class="col-md-3">
-          <label class="form-label fw-semibold">Description</label>
-          <textarea
-            class="form-control"
-            formControlName="description"
-            rows="1"
-            placeholder="Optional description"
-          ></textarea>
-        </div>
-
-        <div class="col-md-3 d-flex align-items-end">
-          <button
-            class="btn btn-danger w-100"
-            type="submit"
-            [disabled]="trackForm.invalid"
-          >
-            {{ isEditing ? "Update" : "Add" }}
-          </button>
-        </div>
-
-        @if (isEditing) {
-        <div class="col-md-12 text-end">
-          <button
-            class="btn btn-secondary btn-sm"
-            type="button"
-            (click)="cancelEdit()"
-          >
-            Cancel Edit
-          </button>
-        </div>
-        }
-      </form>
+      </div>
     </div>
   </div>
 
   @if (tracks) {
-  <div class="row g-3">
-    <div class="col-md-4" *ngFor="let t of tracks">
+  <div class="row g-4">
+    @for (t of tracks; track t._id; let i = $index) {
+    <div class="col-md-6 col-lg-4">
       <div class="shared-card">
         <div class="header">
           <h5><i class="bi bi-diagram-3 me-2"></i>{{ t.name }}</h5>
           <span class="badge">{{ t.round?.name || "No Round" }}</span>
         </div>
 
-        <p class="info" *ngIf="t.description">
+        @if (t.description) {
+        <p class="info">
           <i class="bi bi-info-circle"></i> {{ t.description }}
         </p>
+        }
 
         <div class="actions">
           <button
@@ -124,6 +76,124 @@
         </div>
       </div>
     </div>
+    } @empty {
+    <div class="text-center text-muted py-5">
+      <i class="bi bi-inboxes display-5 text-danger mb-3 d-block"></i>
+      <p>No tracks found.</p>
+    </div>
+    }
+  </div>
+  } @if (hasMore) {
+  <div class="text-center my-4">
+    <button class="btn btn-outline-danger" (click)="loadMore()">
+      Load More
+    </button>
   </div>
   }
+
+  <div
+    #modal
+    class="modal fade"
+    tabindex="-1"
+    aria-hidden="true"
+    role="dialog"
+    id="trackModal"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4 shadow">
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold text-danger">
+            <i class="bi bi-diagram-3 me-2"></i>
+            {{ isEditing ? "Edit Track" : "Add New Track" }}
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="closeModal()"
+          ></button>
+        </div>
+
+        <form [formGroup]="trackForm" (ngSubmit)="onSubmit()">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label">Track Name</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="name"
+                placeholder="Enter track name"
+                [ngClass]="{
+                  'is-valid':
+                    trackForm.get('name')?.valid &&
+                    trackForm.get('name')?.touched,
+                  'is-invalid':
+                    trackForm.get('name')?.invalid &&
+                    trackForm.get('name')?.touched
+                }"
+              />
+              @if ( trackForm.get('name')?.invalid &&
+              trackForm.get('name')?.touched) {
+              <div class="invalid-feedback">
+                Track name is required (min 3 chars)
+              </div>
+              }
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Select Round</label>
+              <select
+                class="form-select"
+                formControlName="roundId"
+                [ngClass]="{
+                  'is-valid':
+                    trackForm.get('roundId')?.valid &&
+                    trackForm.get('roundId')?.touched,
+                  'is-invalid':
+                    trackForm.get('roundId')?.invalid &&
+                    trackForm.get('roundId')?.touched
+                }"
+              >
+                <option value="">Select Round</option>
+                @for (r of rounds; track $index) {
+                <option [value]="r._id">{{ r.name }}</option>
+                }
+              </select>
+              @if ( trackForm.get('roundId')?.invalid &&
+              trackForm.get('roundId')?.touched) {
+              <div class="invalid-feedback">Round is required</div>
+              }
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Description</label>
+              <textarea
+                class="form-control"
+                formControlName="description"
+                rows="2"
+                placeholder="Optional description"
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="modal-footer border-0">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="closeModal()"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="btn btn-danger"
+              [disabled]="trackForm.invalid"
+            >
+              {{ isEditing ? "Update" : "Add" }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>

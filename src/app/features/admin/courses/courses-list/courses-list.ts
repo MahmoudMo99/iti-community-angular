@@ -1,34 +1,61 @@
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  AfterViewInit,
+  OnDestroy,
+} from "@angular/core";
+import {
+  FormBuilder,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from "@angular/forms";
 import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
-import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
+import { debounceTime, distinctUntilChanged, Subject } from "rxjs";
 import Swal from "sweetalert2";
+
 import { Course } from "../../../../core/services/course";
 import { Track } from "../../../../core/services/track";
-import { Round } from "../../../../core/services/round";
 import { User } from "../../../../core/services/user";
+
+declare var bootstrap: any;
 
 @Component({
   selector: "app-courses-list",
-  imports: [CommonModule, ReactiveFormsModule],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: "./courses-list.html",
-  styleUrl: "./courses-list.scss",
+  styleUrls: ["./courses-list.scss"],
 })
-export class CoursesList {
+export class CoursesList implements AfterViewInit, OnDestroy {
+  @ViewChild("modal") modalElement!: ElementRef;
+  bsModal: any;
+
   courses: any[] = [];
   tracks: any[] = [];
-  rounds: any[] = [];
   instructors: any[] = [];
-  loading = true;
-  isEditing = false;
-  editingId: string | null = null;
+
+  totalItems = 0;
+  hasMore = false;
+  currentPage = 1;
+  itemsPerPage = 6;
+
+  searchTerm = "";
+  selectedTrack = "";
+  lectureInstructorFilter = "";
+  labInstructorFilter = "";
+
+  searchChanged = new Subject<string>();
 
   courseForm: any;
+  isEditing = false;
+  editingId: string | null = null;
 
   constructor(
     private fb: FormBuilder,
     private courseService: Course,
     private trackService: Track,
-    private roundService: Round,
     private userService: User
   ) {
     this.courseForm = this.fb.group({
@@ -36,37 +63,101 @@ export class CoursesList {
       track: ["", Validators.required],
       lectureInstructor: [""],
       labInstructor: [""],
+      description: [""],
     });
   }
 
-  ngOnInit(): void {
-    this.loadAll();
+  ngAfterViewInit() {
+    this.bsModal = new bootstrap.Modal(this.modalElement.nativeElement);
   }
 
-  loadAll() {
+  ngOnDestroy() {
+    if (this.bsModal) this.bsModal.dispose();
+  }
+
+  ngOnInit() {
+    this.loadTracks();
+    this.loadInstructors();
     this.loadCourses();
-    this.trackService.getTracks().subscribe((res) => (this.tracks = res));
-    this.roundService.getRounds().subscribe((res) => (this.rounds = res));
-    this.userService
-      .getInstructors()
-      .subscribe((res) => (this.instructors = res));
+
+    this.searchChanged
+      .pipe(debounceTime(400), distinctUntilChanged())
+      .subscribe(() => this.applyFilters());
+  }
+
+  loadTracks() {
+    this.trackService.getTracks().subscribe({
+      next: (res: any) => (this.tracks = res.tracks || res),
+    });
+  }
+
+  loadInstructors() {
+    this.userService.getInstructors().subscribe({
+      next: (res: any) => (this.instructors = res),
+    });
   }
 
   loadCourses() {
-    this.loading = true;
-    this.courseService.getCourses().subscribe({
-      next: (res) => {
-        this.courses = res;
-        this.loading = false;
-      },
-      error: () => (this.loading = false),
-    });
+    this.courseService
+      .getCourses(
+        this.searchTerm,
+        this.selectedTrack,
+        this.lectureInstructorFilter,
+        this.labInstructorFilter,
+        this.currentPage,
+        this.itemsPerPage
+      )
+      .subscribe({
+        next: (res: any) => {
+          const newCourses = res.courses
+            ? res.courses.map((c: any, idx: number) => ({
+                ...c,
+                index: this.courses.length + idx + 1,
+              }))
+            : res.map((c: any, idx: number) => ({
+                ...c,
+                index: this.courses.length + idx + 1,
+              }));
+
+          this.courses = [...this.courses, ...newCourses];
+          this.totalItems = res.total || this.courses.length;
+          this.hasMore = this.courses.length < this.totalItems;
+        },
+        error: () => {
+          this.courses = [];
+          this.hasMore = false;
+        },
+      });
+  }
+
+  applyFilters() {
+    this.currentPage = 1;
+    this.courses = [];
+    this.loadCourses();
+  }
+  loadMore() {
+    this.currentPage++;
+    this.loadCourses();
+  }
+
+  openModal() {
+    this.isEditing = false;
+    this.editingId = null;
+    this.courseForm.reset();
+    this.bsModal.show();
+  }
+
+  closeModal() {
+    this.bsModal.hide();
+    this.courseForm.reset();
+    this.isEditing = false;
+    this.editingId = null;
   }
 
   onSubmit() {
     if (this.courseForm.invalid) return;
-    const data = this.courseForm.value;
 
+    const data = this.courseForm.value;
     const action = this.isEditing
       ? this.courseService.updateCourse(this.editingId!, data)
       : this.courseService.addCourse(data);
@@ -79,11 +170,12 @@ export class CoursesList {
           timer: 1500,
           showConfirmButton: false,
         });
-        this.courseForm.reset();
-        this.isEditing = false;
-        this.loadCourses();
+        this.applyFilters();
+        this.closeModal();
       },
-      error: (err) => console.error(err),
+      error: () => {
+        Swal.fire("Error", "Something went wrong", "error");
+      },
     });
   }
 
@@ -92,11 +184,12 @@ export class CoursesList {
     this.editingId = course._id;
     this.courseForm.patchValue({
       title: course.title,
-      track: course.track?._id,
-      round: course.round?._id,
-      lectureInstructor: course.lectureInstructor?._id,
-      labInstructor: course.labInstructor?._id,
+      track: course.track?._id || "",
+      lectureInstructor: course.lectureInstructor?._id || "",
+      labInstructor: course.labInstructor?._id || "",
+      description: course.description || "",
     });
+    this.bsModal.show();
   }
 
   deleteCourse(id: string) {
@@ -112,18 +205,9 @@ export class CoursesList {
       if (result.isConfirmed) {
         this.courseService.deleteCourse(id).subscribe(() => {
           Swal.fire("Deleted!", "Course has been removed.", "success");
-          this.loadCourses();
+          this.applyFilters();
         });
       }
     });
-  }
-
-  cancelEdit() {
-    this.isEditing = false;
-    this.editingId = null;
-    this.courseForm.reset();
-  }
-  scrollToForm() {
-    document.querySelector("form")?.scrollIntoView({ behavior: "smooth" });
   }
 }

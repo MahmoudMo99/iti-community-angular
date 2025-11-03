@@ -26,6 +26,9 @@ input,
 select,
 textarea {
   box-shadow: none !important;
+  &:focus {
+    border-color: #a1171d !important;
+  }
 }
 
 .shared-card {
@@ -48,6 +51,8 @@ textarea {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
     margin-bottom: 0.8rem;
 
     h5 {
@@ -95,7 +100,7 @@ textarea {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   flex-wrap: wrap;
   gap: 1rem;
 
@@ -117,7 +122,7 @@ textarea {
     color: #fff;
     border: none;
     border-radius: 0.6rem;
-    padding: 0.5rem 1rem;
+    padding: 5px 10px;
     font-weight: 600;
     display: flex;
     align-items: center;

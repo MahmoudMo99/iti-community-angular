@@ -14,6 +14,9 @@ import {
 import { Round } from "../../../../core/services/round";
 import { CommonModule } from "@angular/common";
 import Swal from "sweetalert2";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
+import { Subject } from "rxjs";
+
 declare var bootstrap: any;
 
 @Component({
@@ -37,9 +40,10 @@ export class RoundsList implements OnDestroy, AfterViewInit {
   filterEndDate: string = "";
 
   currentPage = 1;
-  itemsPerPage = 1;
+  itemsPerPage = 6;
   totalItems = 0;
   hasMore = false;
+  searchChanged = new Subject<string>();
 
   constructor(private fb: FormBuilder, private roundService: Round) {
     this.roundForm = this.fb.group({
@@ -60,13 +64,20 @@ export class RoundsList implements OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
+    this.searchChanged
+      .pipe(debounceTime(400), distinctUntilChanged())
+      .subscribe(() => this.applyFilters());
+    this.loadRounds();
+  }
+
+  applyFilters() {
+    this.currentPage = 1;
+    this.rounds = [];
     this.loadRounds();
   }
 
   onFilterChange() {
-    this.currentPage = 1;
-    this.rounds = [];
-    this.loadRounds();
+    this.applyFilters();
   }
 
   loadRounds() {
