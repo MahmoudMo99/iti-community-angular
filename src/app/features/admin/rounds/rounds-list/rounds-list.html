@@ -9,26 +9,37 @@
   <div class="mb-4">
     <div class="row g-3 align-items-center">
       <div class="col-12 col-md-6">
-        <div class="input-group search-box">
-          <span class="input-group-text bg-white border-end-0">
-            <i class="bi bi-search text-danger"></i>
-          </span>
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Search rounds..."
-            [(ngModel)]="searchTerm"
-            (ngModelChange)="searchChanged.next($event)"
-          />
+        <div class="d-flex flex-column">
+          <label
+            class="form-label text-muted fw-semibold small"
+            for="course-search"
+            >Search:</label
+          >
+          <div class="input-group search-box">
+            <span class="input-group-text bg-white border-end-0">
+              <i class="bi bi-search text-danger"></i>
+            </span>
+            <input
+              type="text"
+              id="course-search"
+              class="form-control"
+              placeholder="Search rounds..."
+              [(ngModel)]="searchTerm"
+              (ngModelChange)="searchChanged.next($event)"
+            />
+          </div>
         </div>
       </div>
 
       <div class="col-6 col-md-3">
-        <div
-          class="d-flex flex-column flex-md-row align-items-start align-items-md-center"
-        >
-          <label class="me-2 text-muted fw-semibold small">Start:</label>
+        <div class="d-flex flex-column">
+          <label
+            class="form-label text-muted fw-semibold small"
+            for="start-date-filter"
+            >Start:</label
+          >
           <input
+            id="start-date-filter"
             type="date"
             class="form-control"
             [(ngModel)]="filterStartDate"
@@ -38,11 +49,14 @@
       </div>
 
       <div class="col-6 col-md-3">
-        <div
-          class="d-flex flex-column flex-md-row align-items-start align-items-md-center"
-        >
-          <label class="me-2 text-muted fw-semibold small">End:</label>
+        <div class="d-flex flex-column">
+          <label
+            class="form-label text-muted fw-semibold small"
+            for="end-date-filter"
+            >End:</label
+          >
           <input
+            id="end-date-filter"
             type="date"
             class="form-control"
             [(ngModel)]="filterEndDate"

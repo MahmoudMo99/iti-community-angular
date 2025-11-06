@@ -8,28 +8,38 @@
 
   <div class="mb-4">
     <div class="row g-3 align-items-center">
-      <div class="col-12 col-md-6">
-        <div class="input-group search-box">
-          <span class="input-group-text bg-white border-end-0">
-            <i class="bi bi-search text-danger"></i>
-          </span>
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Search courses..."
-            [(ngModel)]="searchTerm"
-            (ngModelChange)="searchChanged.next($event)"
-          />
+      <div class="col-12 col-md-3">
+        <div class="d-flex flex-column">
+          <label
+            class="form-label text-muted fw-semibold small"
+            for="course-search"
+            >Search:</label
+          >
+          <div class="input-group search-box">
+            <span class="input-group-text bg-white border-end-0">
+              <i class="bi bi-search text-danger"></i>
+            </span>
+            <input
+              type="text"
+              id="course-search"
+              class="form-control"
+              placeholder="Search courses..."
+              [(ngModel)]="searchTerm"
+              (ngModelChange)="searchChanged.next($event)"
+            />
+          </div>
         </div>
       </div>
 
-      <!-- Track Filter -->
-      <div class="col-12 col-md-6">
-        <div
-          class="d-flex flex-column flex-md-row align-items-start align-items-md-center"
-        >
-          <label class="me-2 text-muted fw-semibold small">Track:</label>
+      <div class="col-12 col-md-3">
+        <div class="d-flex flex-column">
+          <label
+            class="form-label text-muted fw-semibold small"
+            for="track-filter"
+            >Track:</label
+          >
           <select
+            id="track-filter"
             class="form-select"
             [(ngModel)]="selectedTrack"
             (change)="applyFilters()"
@@ -42,45 +52,56 @@
         </div>
       </div>
 
-      <!-- Lecture Instructor Filter -->
-      <div class="col-12 col-md-4">
-        <label class="form-label fw-semibold">Lecture Instructor</label>
-        <select
-          class="form-select"
-          [(ngModel)]="lectureInstructorFilter"
-          (change)="applyFilters()"
-        >
-          <option value="">All Lecture Instructors</option>
-          <option
-            *ngFor="let instructor of instructors"
-            [value]="instructor._id"
+      <div class="col-6 col-md-3">
+        <div class="d-flex flex-column">
+          <label
+            class="form-label text-muted fw-semibold small"
+            for="lecture-instructor-filter"
+            >Lecture Instructor:</label
           >
-            {{ instructor.name }}
-          </option>
-        </select>
+          <select
+            id="lecture-instructor-filter"
+            class="form-select"
+            [(ngModel)]="lectureInstructorFilter"
+            (change)="applyFilters()"
+          >
+            <option value="">All Instructor</option>
+            <option
+              *ngFor="let instructor of instructors"
+              [value]="instructor._id"
+            >
+              {{ instructor.name }}
+            </option>
+          </select>
+        </div>
       </div>
 
-      <!-- Lab Instructor Filter -->
-      <div class="col-12 col-md-4">
-        <label class="form-label fw-semibold">Lab Instructor</label>
-        <select
-          class="form-select"
-          [(ngModel)]="labInstructorFilter"
-          (change)="applyFilters()"
-        >
-          <option value="">All Lab Instructors</option>
-          <option
-            *ngFor="let instructor of instructors"
-            [value]="instructor._id"
+      <div class="col-6 col-md-3">
+        <div class="d-flex flex-column">
+          <label
+            class="form-label text-muted fw-semibold small"
+            for="lab-instructor-filter"
+            >Lab Instructor:</label
           >
-            {{ instructor.name }}
-          </option>
-        </select>
+          <select
+            id="lab-instructor-filter"
+            class="form-select"
+            [(ngModel)]="labInstructorFilter"
+            (change)="applyFilters()"
+          >
+            <option value="">All Instructor</option>
+            <option
+              *ngFor="let instructor of instructors"
+              [value]="instructor._id"
+            >
+              {{ instructor.name }}
+            </option>
+          </select>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Courses Cards -->
   @if (courses) {
   <div class="row g-4">
     @for (c of courses; track c._id; let i = $index) {
@@ -91,25 +112,26 @@
           <span class="badge">{{ c.track?.name || "No Track" }}</span>
         </div>
 
-        <p class="info" *ngIf="c.track?.round">
+        @if(c.track.round) {
+        <p class="info">
           <i class="bi bi-calendar-event"></i> Round:
           {{ c.track?.round?.name || "-" }}
         </p>
-
-        <p class="info" *ngIf="c.lectureInstructor">
+        } @if(c.lectureInstructor) {
+        <p class="info">
           <i class="bi bi-person-video3"></i> Lecture:
           {{ c.lectureInstructor?.name }}
         </p>
-
-        <p class="info" *ngIf="c.labInstructor">
+        } @if(c.labInstructor) {
+        <p class="info">
           <i class="bi bi-person-workspace"></i> Lab:
           {{ c.labInstructor?.name }}
         </p>
-
-        <p class="info" *ngIf="c.description">
+        } @if(c.description) {
+        <p class="info">
           <i class="bi bi-info-circle"></i> {{ c.description }}
         </p>
-
+        }
         <div class="actions">
           <button
             class="btn btn-outline-secondary btn-sm"
@@ -141,7 +163,6 @@
   </div>
   }
 
-  <!-- Modal -->
   <div
     #modal
     class="modal fade"

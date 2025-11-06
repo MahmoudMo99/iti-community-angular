@@ -87,14 +87,16 @@ export class CoursesList implements AfterViewInit, OnDestroy {
 
   loadTracks() {
     this.trackService.getTracks().subscribe({
-      next: (res: any) => (this.tracks = res.tracks || res),
+      next: (res: any) => {
+        this.tracks = res.tracks;
+      },
     });
   }
 
   loadInstructors() {
-    this.userService.getInstructors().subscribe({
-      next: (res: any) => (this.instructors = res),
-    });
+    // this.userService.getInstructors().subscribe({
+    //   next: (res: any) => (this.instructors = res),
+    // });
   }
 
   loadCourses() {
